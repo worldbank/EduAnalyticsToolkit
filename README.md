@@ -19,13 +19,16 @@ like this.
 ```
 
 ### **Content**
-**edukit** provides a set of commands that address different aspects of data management and data analysis in relation
-to International/National Learning Assessments (ILA/NLA). The list of commands will be extended continuously, and suggestions for
+**edukit** provides a set of commands that address different aspects of data management and data analysis for
+International/National Learning Assessments (ILA/NLA) microdata databases.
+The list of commands will be extended continuously, and suggestions for
 new commands are greatly appreciated.
 
- - **edukit** returns meta info on the version of _eduanalyticstoolkit_ installed.
+ - **edukit** returns meta info on the version of _edukit_ installed.
  Can be used to ensure that the team uses the same version.
- - **edukit_save** is a modified version of the save command to ensure quality of microdata databases.
- It compress, check _isid_, adds metadata as _char_ and, of course, save.
- 
- 
+ - **edukit_save** is a modified version of the save command to ensure quality of databases.
+Before saving, it compress, check _isid_, and has options to store metadata as _char_
+plus flexibility to execute special commands for eduanalytics.
+ - **edukit_pandoc** calls pandoc in a shell to convert between two formats.
+ Intended to easily convert HTML created by dyndoc to GitHub-flavored Markdown,
+ but made in a flexible way that other input and output files are allowed.
