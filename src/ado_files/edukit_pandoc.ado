@@ -1,3 +1,5 @@
+*! version 0.1 11JUL2019 EduAnalytics team_email@worldbank.org
+
 * Uses Pandoc to convert HTML created by dyndoc to GitHub-flavored Markdown (GFM)
 *      but made in a flexible way that other input and output files are allowed.
 

@@ -1,3 +1,5 @@
+*! version 0.1 11JUL2019 EduAnalytics team_email@worldbank.org
+
 * Saves a dataset after compressing and checking isid, with
 *   options to store metadata and variable information in chars,
 *   plus flexibility to execute special commands for eduanalytics.
