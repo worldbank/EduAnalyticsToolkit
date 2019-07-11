@@ -1,0 +1,8 @@
+v 0.1
+d edukit
+d EduAnalytics, World Bank Group (GDB/GEDEDU)
+
+f /ado_files/edukit.ado
+f /ado_files/edukit_save.ado
+f /ado_files/edukit_pandoc.ado
+e
