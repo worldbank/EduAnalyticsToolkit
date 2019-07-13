@@ -92,7 +92,7 @@ program define   edukit_save, rclass
 	**************************************
 	*Macro metadata_chars is needed when generating html via dyndoc
 	* it starts with automatic metadata and is updated with tokenized varsclass
-	local metadata_chars "lastsave varclasses"
+	local metadata_chars "lastsave varclasses_used"
 	while "`metadata'" != "" {
 		*Parsing char and value to set
 		gettoken setchar_and_setvalue metadata : metadata, parse(";")

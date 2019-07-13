@@ -27,8 +27,8 @@ program define   edukit_pandoc
 	}
 
 	* adds path to input and output files
-	local full_input	 "`path'\`file'"
-	local full_output	 "`path'\`output'"
+	local full_input	 "`path'/`file'"
+	local full_output	 "`path'/`output'"
 	
 	* calls pandoc command line into a shell
 	local  pandoc_cmd  = "`pandoc' `full_input' -f `from' -t `to' -s -o `full_output'"
@@ -42,7 +42,7 @@ end
 
 global mypath	  "C:/Users/WB552057/Documents/Github/GLAD/00_documentation/"
 global pandoc	  "C:/Users/WB552057/Pandoc/pandoc"
-local  file			"LAC_2006_LLECE_v01_M_v01_GLAD.html"
+local  file			"LAC_2006_LLECE_v01_M_wrk_A_GLAD.html"
 
 edukit_pandoc, p("${mypath}") f("`file'") pandoc("${pandoc}")
 
