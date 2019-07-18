@@ -27,7 +27,7 @@ program  define  edukit_datalibweb, rclass
 		* Tentatively call datalibweb 5 times, but stops before if gets non-empty dataset	*/
 		while `attempt'<=5 & `success'!=1 {
 
-			capture datalibweb, "`datalibweb_syntax'"
+			capture datalibweb, `datalibweb_syntax'
 
 			if _rc==0 {
 				/* If datalibweb did not run into any errors,	still double checks that
@@ -46,7 +46,7 @@ program  define  edukit_datalibweb, rclass
 			noi disp as err "{phang}Having issues with datalibweb, after 5 failed attempts. Check the original datalibweb help file and the error message below for more info.{p_end}"
 			/* Trick to display the original datalibweb error message: call it again
 			   If it succeeds this time after 5 errors, it's a miracle! */
-			datalibweb, "`datalibweb_syntax'"
+			datalibweb, `datalibweb_syntax'
 		}
 
 	* Just in case this may be useful
