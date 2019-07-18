@@ -4,8 +4,8 @@ capture program drop edukit
 program edukit, rclass
 
 	* UPDATE THESE LOCALS FOR EACH NEW VERSION PUBLISHED
-	local version "0.1"
-	local versionDate "11JUL2019"
+	local version "0.2"
+	local versionDate "15JUL2019"
 
 	syntax [anything]
 
