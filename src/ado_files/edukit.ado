@@ -1,4 +1,4 @@
-*! version 0.1 11JUL2019 EduAnalytics team_email@worldbank.org
+*! version 0.2 15JUL2019 EduAnalytics eduanalytics@worldbank.org
 
 capture program drop edukit
 program edukit, rclass
