@@ -153,9 +153,6 @@ program define   edukit_save, rclass
 		* Before discarding variables without a varclass, saves GLAD_module-BASE.dta
 		save "`path'/`filename'-BASE.dta", replace
 	}
-	else if "`collection'" == "CLO" { * CLO = Country Level Outcomes
-		* Nothing here for now
-	}
 	else {
 		* Option collection can be ommited, but if used and does not match the above, assumes it was an error
 		noi disp as error "{phang}You specified a collection for which no special commands are defined. Ommit the collection option, or try another collection.{p_end}"
