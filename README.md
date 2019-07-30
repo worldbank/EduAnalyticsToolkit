@@ -1,13 +1,21 @@
-**Edukit - Stata Commands for Education Data Analytics**
+**Edukit - Stata commands for analyzing learning assessments**
 =====
-Logo. Blurb about EduAnalytics.
+<img align="left" src="https://user-images.githubusercontent.com/43160181/62169131-58ea6a00-b2f5-11e9-977f-18117cc9e42d.png" width="130">
+
+This toolkit was developed by people that work at or with the **EduAnalytics** team at the World Bank Education Global Practice.
+
+While the commands in this toolkit are developed with best practices for analysis of microdata of learning assessments in mind, some commands may be useful outside that field as well.
+
+The team can be reached at eduanalytics@worldbank.org.
+
+
 
 ### **Install and Update**
 
 #### Installing published versions of `edukit`
 One day **edukit** may make it to ssc but for now, it is not, so this option does not exist.
 
-#### Installing unpublished branches of this repository
+#### Installing unpublished branches of this repository through _net install_
 Follow the instructions above if you want the most recent published version of **edukit**.
 If you want a yet to be published version of **edukit** then you can use the code below.
 The code below installs the version currently in the `master` branch, but replace _master_ in the URL below
@@ -15,7 +23,28 @@ with the name of the branch you want to install from. You can also install older
 like this.
 
 ```
-    net install edukit , from("https://raw.githubusercontent.com/worldbank/eduanalyticstoolkit/master/src") replace
+net install edukit , from("https://raw.githubusercontent.com/worldbank/eduanalyticstoolkit/master/src") replace
+```
+
+#### Installing unpublished branches of this repository through a clone
+An alternative to those who prefer not to use `net install` in Stata, is to install this package by cloning this repo and checking out the branch you choose to install (_master_ will be checked out by default). To update the package if the branch is updated, you would need to _pull_ the branch. The installation of the package through this method can be automated in your do file though the code below.
+
+```stata
+* Specify the location of the cloned eduanalytics toolkit repo
+if inlist("`c(username)'","wb111111","WB111111") {
+  global edukit  "C:/Users/WB111111/Documents/Github/EduAnalyticsToolkit"
+}
+
+* Load eduanalytics toolkit package
+cap net uninstall edukit
+cap net install edukit.pkg, from("${edukit}/src") replace
+if _rc == 601 {
+  noi disp as err "{phang}Could not load edukit.pkg. You must specify a valid location of the eduanalytics toolkit package. For more info, check: https://github.com/worldbank/EduAnalyticsToolkit{p_end}"
+  error 601
+}
+else if _rc != 0 {
+  net install edukit.pkg, from("${edukit}/src") replace
+}
 ```
 
 ### **Content**
@@ -29,6 +58,4 @@ new commands are greatly appreciated.
  - **edukit_save** is a modified version of the save command to ensure quality of databases.
 Before saving, it compress, check _isid_, and has options to store metadata as _char_
 plus flexibility to execute special commands for eduanalytics.
- - **edukit_pandoc** calls pandoc in a shell to convert between two formats.
- Intended to easily convert HTML created by dyndoc to GitHub-flavored Markdown,
- but made in a flexible way that other input and output files are allowed.
+ - **edukit_datalibweb** calls _datalibweb_ repeatedly to prevent breaking a loop if connection is temporarily lost or other issues arise while querying many files. _Datalibweb_ is a currently only available for Stata users within the World Bank, so this command is useless to external users.
