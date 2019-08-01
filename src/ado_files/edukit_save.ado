@@ -151,9 +151,12 @@ program define   edukit_save, rclass
 	* Special commands to perform according to collection go here
 	if "`collection'" == "GLAD" {  * GLAD = Global Learning Assessment Database
 		* Before discarding variables without a varclass, saves GLAD_module-BASE.dta
-		save "`path'/`filename'-BASE.dta", replace
+		noi save "`path'/`filename'-BASE.dta", replace
 	}
-	else {
+	else if "`collection'" == "CLO" {  * CLO = Country Level Outcomes
+		noi disp as txt "{phang}FYI: no special commads are defined for collection CLO.{p_end}"
+	}
+	else if "`collection'" != "" {
 		* Option collection can be ommited, but if used and does not match the above, assumes it was an error
 		noi disp as error "{phang}You specified a collection for which no special commands are defined. Ommit the collection option, or try another collection.{p_end}"
 		error 2222
