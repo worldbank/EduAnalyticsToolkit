@@ -149,11 +149,11 @@ program define   edukit_save, rclass
 	compress
 
 	* Special commands to perform according to collection go here
-	if "`collection'" == "GLAD" {  * GLAD = Global Learning Assessment Database
+	if "`collection'" == "GLAD" {  // GLAD = Global Learning Assessment Database
 		* Before discarding variables without a varclass, saves GLAD_module-BASE.dta
 		noi save "`path'/`filename'-BASE.dta", replace
 	}
-	else if "`collection'" == "CLO" {  * CLO = Country Level Outcomes
+	else if "`collection'" == "CLO" {  // CLO = Country Level Outcomes
 		noi disp as txt "{phang}FYI: no special commads are defined for collection CLO.{p_end}"
 	}
 	else if "`collection'" != "" {
