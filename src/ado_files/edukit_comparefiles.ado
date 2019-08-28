@@ -308,17 +308,21 @@ qui {
 			}
 
 
-			
+			* Var is of same typ in both files. Continue with test
 			else {
 
 				**************
 				* Test that variables are identical
 
-				local wigglevar : list compvar in wigglevars
-				if `wigglevar' local wigglenote ", despite using a wiggle room of `wigglepercent'"
+				local thisvar_wigglevar : list compvar in wigglevars
+				if `thisvar_wigglevar' local wigglenote " (using a wiggle room of `wigglepercent')"
 
-				if ("`vartype'" == "string") | ("`vartype'" == "numeric" & `wigglevar'==0) {
-					* String variables and numric variable without wiggle room
+				if ("`vartype'" == "string") {
+					* String variables tests are srtaight forward
+					replace `same'  = (`compvar' == `compvar'_nw)
+				}
+				else if (`thisvar_wigglevar'==0) {
+					* Numeric without wiggle room is straightforward
 					replace `same'  = (`compvar' == `compvar'_nw)
 				}
 				else {
