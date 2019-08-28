@@ -27,6 +27,21 @@ qui {
 	  ************* Test input *************
 		**************************************
 
+		* Test if the file paths to local and shared files are correct
+		foreach file in localfile sharedfile {
+
+			* If no file extension is used, add .dta
+			if (substr("``file''", -4, .) != ".dta") local `file' "``file''.dta"
+
+			* Test that file exists
+			cap confirm file "``file''"
+			if _rc == 601 {
+				noi di as error "{phang}The file used in option `file'() is not found. Check if this file path is correct: ``file'' {p_end}"
+				error _rc
+			}
+			else if _rc confirm file "``file''"
+		}
+
 		* Test that at least comparell or comparevars were used
 		if "`compareall'`comparevars'" == "" {
 			noi di as error "{phang}You must use one of the options {cmd:compareall} or {cmd:comparevars}.{p_end}"
