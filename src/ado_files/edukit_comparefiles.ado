@@ -98,6 +98,9 @@ qui {
 	  ********* Prepare local file *********
 		**************************************
 
+		noi di "{pstd}Local file:  `localfile'{p_end}"
+		noi di "{pstd}Shared file: `sharedfile'{p_end}"
+		noi di ""
 
 		use "`localfile'", clear
 
