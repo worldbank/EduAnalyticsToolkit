@@ -120,7 +120,7 @@ qui {
 
 		*Save the number of obseravations
 		local obs_in_new_file = _N
-		noi di "{pstd}Local file has `obs_in_new_file' observations.{p_end}"
+		noi di "{col 5}Local file: {col 18}N = `obs_in_new_file'"
 
 		* Make a list of all vars in the new file
 		ds
@@ -156,6 +156,8 @@ qui {
 
 		*Save the number of obseravations
 		local obs_in_shared_file = _N
+		noi di "{col 5}Shared file: {col 18}N = `obs_in_shared_file'"
+
 
 		* Make a list of all vars in the shared file
 		ds
