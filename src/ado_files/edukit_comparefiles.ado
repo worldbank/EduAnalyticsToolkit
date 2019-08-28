@@ -325,47 +325,51 @@ qui {
 			}
 
 
-			**************
-			* Test that variables are identical
-
-			local wigglevar : list compvar in wigglevars
-			if `wigglevar' local wigglenote ", despite using a wiggle room of `wigglepercent'"
-
-			if ("`vartype'" == "string") | ("`vartype'" == "numeric" & `wigglevar'==0) {
-				* String variables and numric variable without wiggle room
-				replace `same'  = (`compvar' == `compvar'_nw)
-			}
+			
 			else {
 
-				*Take the biggest value of the two vars and calculate absolute wiggle room from wiggle percent
-				replace `wigglevalue' = max(abs(`compvar'),abs(`compvar'_nw)) * `wiggleroom'
+				**************
+				* Test that variables are identical
 
-				*Numeric varaibles are allowed to be .01% off by default (rounding errors, rand noise, export/import errors)
-				replace `same'  = ( abs(`compvar' -`compvar'_nw)  < `wigglevalue')
+				local wigglevar : list compvar in wigglevars
+				if `wigglevar' local wigglenote ", despite using a wiggle room of `wigglepercent'"
 
-			}
+				if ("`vartype'" == "string") | ("`vartype'" == "numeric" & `wigglevar'==0) {
+					* String variables and numric variable without wiggle room
+					replace `same'  = (`compvar' == `compvar'_nw)
+				}
+				else {
 
-			* Count if any values were different, if so display info
-			count if (`same'  == 0)
-			local count_diff `r(N)'
-			if `count_diff' > 0 {
+					*Take the biggest value of the two vars and calculate absolute wiggle room from wiggle percent
+					replace `wigglevalue' = max(abs(`compvar'),abs(`compvar'_nw)) * `wiggleroom'
 
-				local identical = 0
+					*Numeric varaibles are allowed to be .01% off by default (rounding errors, rand noise, export/import errors)
+					replace `same'  = ( abs(`compvar' -`compvar'_nw)  < `wigglevalue')
 
-				noi di "{phang}Variable value miss-match in `compvar': `count_diff' mismatches`wigglenote'.{p_end}"
+				}
 
-				if "`listdetail'" != "" {
+				* Count if any values were different, if so display info
+				count if (`same'  == 0)
+				local count_diff `r(N)'
+				if `count_diff' > 0 {
 
-					*write down the detialed list if listdetail is specified
-					file write `filehandle' "***`compvar'" _n
-					file write `filehandle' "|obs|`compvar'_local|`compvar'_shared|" _n
-					file write `filehandle' "|---|---|---|" _n
+					local identical = 0
 
-					forvalues i = 1/_N {
-						if `same'[`i'] == 1 {
-							local value1 = `compvar'[`i']
-							local value2 = `compvar'_nw[`i']
-							file write `filehandle' "|`i'|`value1'|`value2'|" _n
+					noi di "{phang}Variable value miss-match in `compvar': `count_diff' mismatches`wigglenote'.{p_end}"
+
+					if "`listdetail'" != "" {
+
+						*write down the detialed list if listdetail is specified
+						file write `filehandle' "***`compvar'" _n
+						file write `filehandle' "|obs|`compvar'_local|`compvar'_shared|" _n
+						file write `filehandle' "|---|---|---|" _n
+
+						forvalues i = 1/_N {
+							if `same'[`i'] == 1 {
+								local value1 = `compvar'[`i']
+								local value2 = `compvar'_nw[`i']
+								file write `filehandle' "|`i'|`value1'|`value2'|" _n
+							}
 						}
 					}
 				}
