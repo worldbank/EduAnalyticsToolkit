@@ -3,8 +3,8 @@
 * if listdetail(filename) is specified, a markdown file will be created listing
 * all the different observations.
 
-cap program drop comparefiles
-program comparefiles, rclass
+cap program drop edukit_comparefiles
+program edukit_comparefiles, rclass
 
 qui {
 
