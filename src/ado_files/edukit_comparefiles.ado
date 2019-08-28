@@ -23,6 +23,8 @@ qui {
 
 	preserve
 
+	noi di ""
+
 	  **************************************
 	  ************* Test input *************
 		**************************************
@@ -79,9 +81,9 @@ qui {
 			file write `filehandle' "Shared file: `sharedfile'" _n
 		}
 
-		*Use 0.01 percent as default wiggle room
+		*
 		if "`varlistlenmax'" == "" {
-				local varlistlenmax  200 // default value .01%
+				local varlistlenmax  200 //
 		}
 
 
@@ -264,23 +266,32 @@ qui {
 		*Keep only observatins in both
 		keep if local_shared_merge == 3
 
+		local N_both `=_N'
+
 		if "`listdetail'" != "" {
 			file write `filehandle' "**Unmatched variables" _n
 		}
 
+		local allvarsidentical = 1
+
 		* Create a list of variables
 		local comparevars_both_files : list shared_file_comparevars & new_file_comparevars
 
-		tempvar same wigglevalue
+		tempvar same wigglevalue diff
 		gen `same'        = 0
 		gen `wigglevalue' = 0
 
 		*Loop over all non-idvars
 		foreach compvar of local comparevars_both_files {
 
+			noi di ""
+			noi di "{pstd}`compvar'{p_end}"
+
 			*Reset values for each var
 			replace `same'        = 0
 			replace `wigglevalue' = 0
+
+			cap drop `diff'
 
 			*Note to display when wiggle room was
 			local wigglenote ""
@@ -298,7 +309,7 @@ qui {
 			if _rc {
 
 				*Output in result window
-				noi disp "{phang}Variable `compvar' is `vartype' in local file but not in shared file.{p_end}"
+				noi disp "{phang}Type miss-missmatch, `vartype' in local file {p_end}"
 
 				* Out put in file if listdetail option used
 				if "`listdetail'" != "" {
@@ -333,16 +344,27 @@ qui {
 					*Numeric varaibles are allowed to be .01% off by default (rounding errors, rand noise, export/import errors)
 					replace `same'  = ( abs(`compvar' -`compvar'_nw)  < `wigglevalue')
 
+					* Missing values in both files is still same.
+					replace `same'  = 1 if missing(`compvar') & missing(`compvar'_nw)
 				}
+
+
+				**************
+				* Display results from listig if identical
 
 				* Count if any values were different, if so display info
 				count if (`same'  == 0)
 				local count_diff `r(N)'
 				if `count_diff' > 0 {
 
+					if  "`vartype'" == "string" gen `diff' = "N/A"
+					else gen `diff' = abs(`compvar' - `compvar'_nw)
+
 					local identical = 0
 
-					noi di "{phang}Variable value miss-match in `compvar': `count_diff' mismatches`wigglenote'.{p_end}"
+					noi di "{phang}`count_diff'  miss-match out of `N_both' obs`wigglenote'.{p_end}"
+
+					noi list `idvars' `compvar' `compvar'_nw `diff' if `same' == 0
 
 					if "`listdetail'" != "" {
 
@@ -359,6 +381,9 @@ qui {
 							}
 						}
 					}
+				}
+				else {
+					noi di "{phang}All `N_both' observations are identical`wigglenote'.{p_end}"
 				}
 			}
 		}  // foreach compvar of local comparevars_both_files
