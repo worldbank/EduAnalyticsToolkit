@@ -242,35 +242,18 @@ qui {
 		* Test if local file has observations not in shared
 		count if local_shared_merge == 1
 		local num_obs_only_in_local `r(N)'
-		if `num_obs_only_in_local' > 0 {
-			noi di "{phang}There are `num_obs_only_in_local' observation(s) out the `obs_in_new_file' observations in the local file that does not exist in the shared file.{p_end}"
-
-			local identical = 0
-
-			if "`listdetail'" != "" {
-				file write `filehandle' "Less obs in shared" _n
-				* PLACEHOLDER!!!
-				*noi list `idvars' if local_shared_merge == 1
-			}
-		}
-
-		**************************************
-		* Test if shared file has observations not in local
 
 		count if local_shared_merge == 2
 		local num_obs_only_in_shared `r(N)'
-		if `num_obs_only_in_shared' > 0 {
 
-			noi di "{phang}There are `num_obs_only_in_shared' observation(s) out the `obs_in_shared_file' observations in the local file that does not exist in the shared file.{p_end}"
+		count if local_shared_merge == 3
+		local num_obs_both `r(N)'
 
-			local identical = 0
+		noi di "{pstd}In both file: `num_obs_both' obs.{p_end}"
+		noi di "{pstd}In local file only: `num_obs_only_in_local' obs.{p_end}"
+		noi di "{pstd}In shared file only: `num_obs_only_in_shared' obs.{p_end}"
 
-			if "`listdetail'" != "" {
-				file write `filehandle' "More obs in shared" _n
-				* PLACEHOLDER!!!
-				*noi list `idvars' if local_shared_merge == 2
-			}
-		}
+
 
 		**************************************
 	  ********** Test Difference ***********
