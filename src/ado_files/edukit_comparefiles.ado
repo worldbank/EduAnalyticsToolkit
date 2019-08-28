@@ -107,10 +107,8 @@ qui {
 		*test that idvars are fully an uniquely identifying
 		cap isid `idvars'
 		if _rc ==459 {
-			noi disp "variables `idvars' do not uniquely identify the observations in localfile"
-			noi disp "could not compare local and shared files"
-			local identical = 0
-			exit
+			noi di as error "{pstd}Variables [`idvars'] do not fully and uniquely identify the observations in localfile(). The local and shared files can only be compared if they have the same fully and uniquely identifying ID variables.{p_end}"
+			error _rc
 		}
 
 		** If compareall was used, then take all variables from localfile apart
@@ -152,10 +150,8 @@ qui {
 		*test that idvars are fully an uniqely identiftying
 		cap isid `idvars'
 		if _rc ==459 {
-			noi disp "variables `idvars' do not uniquely identify the observations in sharedfile"
-			noi disp "could not compare local and shared files"
-			local identical = 0
-			exit
+			noi di as error "{pstd}Variables [`idvars'] do not fully and uniquely identify the observations in sharedfile(). The local and shared files can only be compared if they have the same fully and uniquely identifying ID variables.{p_end}"
+			error _rc
 		}
 
 		*Save the number of obseravations
