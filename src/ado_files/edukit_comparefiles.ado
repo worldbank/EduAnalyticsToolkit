@@ -182,14 +182,21 @@ qui {
 		***** Missing compare variables ******
 		**************************************
 
-		*Export list of compare variables missing in local file
+		noi di ""
+		if ("`compareall'" != "") noi di "{pstd}The option [compareall] was used so all variables in the local file will be compared across the two files.{p_end}"
+		else noi di "{pstd}The variables in [comparevars(`comparevars')] will be compared across the two files.{p_end}"
+
+		* Export list of compare variables missing in local file
 		if "`new_file_miss_comparevars'" != "" {
 
-			*TRunctate varaible list if too long
+			local identical = 0
+
+			* Trunctate varaible list if too long
 			str_to_disp, string("`new_file_miss_comparevars'") maxlen(`varlistlenmax')
 			local varlist_display "`r(str_to_disp)'"
 
 			*Output in result window
+			noi di ""
 			noi disp "{phang}Value variables are missing in the local file. These variables are missing: `varlist_display' {p_end}"
 
 			* Out put in file if listdetail option used
@@ -202,11 +209,14 @@ qui {
 		*Export list of compare variables missing in shared file
 		if "`shared_file_miss_comparevars'" != "" {
 
-			*TRunctate varaible list if too long
+			local identical = 0
+
+			* Trunctate varaible list if too long
 			str_to_disp, string("`shared_file_miss_comparevars'") maxlen(`varlistlenmax'	)
 			local varlist_display "`r(str_to_disp)'"
 
 			*Output in result window
+			noi di ""
 			noi disp "{phang}Value variables are missing in the shared file. These variables are missing: `varlist_display' {p_end}"
 
 			* Out put in file if listdetail option used
@@ -216,6 +226,11 @@ qui {
 			}
 		}
 
+		if "`new_file_miss_comparevars'" == "" & "`shared_file_miss_comparevars'" == "" {
+			noi di ""
+ 			noi di "{pstd}All compare variables exist in both files.{p_end}"
+		}
+		noi di ""
 
 		**************************************
 	  ********** Test Difference ***********
