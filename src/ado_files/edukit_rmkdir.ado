@@ -30,8 +30,9 @@ program  define  edukit_rmkdir, rclass
 	mata : st_numscalar("r(dirExist)", direxists(`"`this_full_path'"'))
 	if `r(dirExist)' == 0 mkdir `"`this_full_path'"'
 
-	* Recursive call on the rest of the string if there was a slash in the newfolders string
-	if `firstSlash' > 0 qui nestfolder , parent(`"`this_full_path'"') newfolder(`"`rest'"')
+	* Recursive call on the rest of the string if there was a slash in the newfolders
+	* string. rest can be empty when firstSlash is > 0 if newfodlers string end on a /
+	if (`firstSlash' > 0 & "`rest'" != "") qui edukit_rmkdir , parent(`"`this_full_path'"') newfolders(`"`rest'"')
 
 	* Display and return results
 	local resultfolder `"`parent'/`newfolders'"'
