@@ -35,7 +35,7 @@ program  define  edukit_rmkdir, rclass
 
 	* Display and return results
 	local resultfolder `"`parent'/`newfolders'"'
-	noi di as result `"{pstd}Folder [`resultfolder'] was created or did already exist.{p_end}"'
+	noi di as txt `"{pstd}Folder [`resultfolder'] was created or did already exist.{p_end}"'
 	return local folder `"`resultfolder'"'
 
 end
