@@ -11,7 +11,7 @@ qui {
 	syntax , ///
 		localfile(string)   ///
 		sharedfile(string)  ///
-		idvars(string)			///
+		idvars(string)		///
 		[                   ///
 		compareall          ///
 		comparevars(string) ///
@@ -37,9 +37,14 @@ qui {
 
 			* Test that file exists
 			cap confirm file "``file''"
-			if _rc == 601 {
+			if ("`file'" == "localfile" & _rc == 601) {
 				noi di as error "{phang}The file used in option `file'() is not found. Check if this file path is correct: ``file'' {p_end}"
 				error _rc
+			}
+			if ("`file'" == "sharedfile" & _rc == 601) {
+				noi di "{phang}The file used in option `file'() is not found. Check if this file path is correct: ``file''.{p_end}"
+				return local sharednoexist 1
+				exit
 			}
 			else if _rc confirm file "``file''"
 		}
