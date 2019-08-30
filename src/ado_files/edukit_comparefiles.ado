@@ -26,6 +26,15 @@ qui {
 
 	noi di ""
 
+	*Prepare a markdown file for listing differences if listdetail is specified
+	if "`markdown'" != "" {
+		tempname	filehandle
+		tempfile	tmp_mdfile
+		file open  `filehandle' using `tmp_mdfile', write text replace
+
+		markdown_writeheader, filehandle(`filehandle') localfile(`localfile') sharedfile(`sharedfile')
+	}
+
 	  **************************************
 	  ************* Test input *************
 		**************************************
@@ -422,4 +431,17 @@ program str_to_disp, rclass
 		}
 
 		return local str_to_disp "`str_to_disp'"
+end
+
+cap program drop markdown_writeheader
+program markdown_writeheader, rclass
+	syntax , filehandle(string) localfile(string) sharedfile(string)
+	file write `filehandle' "## Compare file output" _n _n "### Meta information:" _n
+	file write `filehandle' "|Key|Value|" _n
+	file write `filehandle' "|---|---|" _n
+	file write `filehandle' "|Local file|`localfile'|" _n
+	file write `filehandle' "|sharedfile|`sharedfile'|" _n
+	file write `filehandle' "|User|`c(username)'|" _n
+	file write `filehandle' "|Date|$S_DATE|" _n
+	file write `filehandle' "|Time|$S_TIME|" _n
 end
