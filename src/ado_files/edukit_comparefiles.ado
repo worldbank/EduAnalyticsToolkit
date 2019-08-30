@@ -208,6 +208,29 @@ qui {
 
 
 		**************************************
+		* Test if local file has observations not in shared
+		count if local_shared_merge == 1
+		local num_obs_only_in_local `r(N)'
+
+		count if local_shared_merge == 2
+		local num_obs_only_in_shared `r(N)'
+
+		count if local_shared_merge == 3
+		local num_obs_both `r(N)'
+
+		noi di "{pstd}In both file: `num_obs_both' obs.{p_end}"
+		noi di "{pstd}In local file only: `num_obs_only_in_local' obs.{p_end}"
+		noi di "{pstd}In shared file only: `num_obs_only_in_shared' obs.{p_end}"
+
+
+		if "`markdown'" != "" {
+			markdown_obs, filehandle(`filehandle') ///
+			obs_in_lfile(`obs_in_local_file') obs_in_sfile(`obs_in_shared_file') ///
+			obs_both(`num_obs_both') obs_only_l(`num_obs_only_in_local') obs_only_s(`num_obs_only_in_shared')
+		}
+
+
+		**************************************
 	  ********** Test Difference ***********
 		**************************************
 		***** Missing compare variables ******
@@ -273,20 +296,8 @@ qui {
 		****** Different observations ********
 		**************************************
 
-		**************************************
-		* Test if local file has observations not in shared
-		count if local_shared_merge == 1
-		local num_obs_only_in_local `r(N)'
 
-		count if local_shared_merge == 2
-		local num_obs_only_in_shared `r(N)'
 
-		count if local_shared_merge == 3
-		local num_obs_both `r(N)'
-
-		noi di "{pstd}In both file: `num_obs_both' obs.{p_end}"
-		noi di "{pstd}In local file only: `num_obs_only_in_local' obs.{p_end}"
-		noi di "{pstd}In shared file only: `num_obs_only_in_shared' obs.{p_end}"
 
 
 
@@ -471,4 +482,18 @@ program markdown_writefile, rclass
 	copy "`markdowntemp'" "`markdownfile'", replace
 	noi disp "Markdown file prepared"
 
+end
+
+cap program drop markdown_obs
+program markdown_obs, rclass
+	syntax , filehandle(string) obs_in_lfile(string) obs_in_sfile(string) obs_both(string) obs_only_l(string) obs_only_s(string)
+
+	file write `filehandle' "### Compare number of observations" _n _n
+	file write `filehandle' "|Key|Number of observations|" _n
+	file write `filehandle' "|---|---|" _n
+	file write `filehandle' "|Local file|`obs_in_lfile' obs|" _n
+	file write `filehandle' "|Shared file|`obs_in_sfile' obs|" _n
+	file write `filehandle' "|Observations in both files|`obs_both' obs|" _n
+	file write `filehandle' "|Observations only in local file|`obs_only_l' obs|" _n
+	file write `filehandle' "|Observations only in shared file|`obs_only_s' obs|" _n
 end
