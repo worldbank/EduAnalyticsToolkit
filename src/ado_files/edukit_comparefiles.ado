@@ -53,7 +53,16 @@ qui {
 			}
 			if ("`file'" == "sharedfile" & _rc == 601) {
 				noi di "{phang}The file used in option `file'() is not found. Check if this file path is correct: ``file''.{p_end}"
+
+				* Out put in file if listdetail option used
+				if "`markdown'" != "" {
+					file write `filehandle' _n "#### Shared file does not exist" _n
+					markdown_writefile , filehandle(`filehandle') markdownfile("`markdown'") markdowntemp("`tmp_mdfile'")
+				}
+
+				return local identical 0
 				return local sharednoexist 1
+
 				exit
 			}
 			else if _rc confirm file "``file''"
@@ -403,10 +412,8 @@ qui {
 			}
 		}  // foreach compvar of local comparevars_both_files
 
-	if "`listdetail'" != "" {
-		file close `filehandle'
-		copy `tmp_mdfile' "`listdetail'", replace
-		noi disp "saved `listdetail'"
+	if "`markdown'" != "" & ("`mdevensame'" != "" | `identical' == 0) {
+		markdown_writefile , filehandle(`filehandle') markdownfile("`markdown'") markdowntemp("`tmp_mdfile'")
 	}
 
 	restore
@@ -444,4 +451,15 @@ program markdown_writeheader, rclass
 	file write `filehandle' "|User|`c(username)'|" _n
 	file write `filehandle' "|Date|$S_DATE|" _n
 	file write `filehandle' "|Time|$S_TIME|" _n
+end
+
+cap program drop markdown_writefile
+program markdown_writefile, rclass
+
+	syntax , filehandle(string) markdownfile(string) markdowntemp(string)
+
+	file close `filehandle'
+	copy "`markdowntemp'" "`markdownfile'", replace
+	noi disp "Markdown file prepared"
+
 end
