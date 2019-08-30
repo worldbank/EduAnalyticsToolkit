@@ -145,27 +145,27 @@ qui {
 		}
 
 		*Save the number of obseravations
-		local obs_in_new_file = _N
-		noi di "{col 5}Local file: {col 18}N = `obs_in_new_file'"
+		local obs_in_local_file = _N
+		noi di "{col 5}Local file: {col 18}N = `obs_in_local_file'"
 
-		* Make a list of all vars in the new file
+		* Make a list of all vars in the local file
 		ds
-		local new_file_vars `r(varlist)'
+		local local_file_vars `r(varlist)'
 
-		* Make a list of all value vars in the new file
-		local new_file_comparevars : list comparevars & new_file_vars
+		* Make a list of all value vars in the local file
+		local local_file_comparevars : list comparevars & local_file_vars
 
-		* Make a list of all value vars expected in new file but missing
-		local new_file_miss_comparevars : list comparevars - new_file_comparevars
+		* Make a list of all value vars expected in local file but missing
+		local local_file_miss_comparevars : list comparevars - local_file_comparevars
 
-		*Rename all vars in the new data set (this rename will not be saves)
-		foreach newvar of local new_file_comparevars {
-			rename `newvar' `newvar'_nw
+		*Rename all vars in the local data set (this rename will not be saves)
+		foreach localvar of local local_file_comparevars {
+			rename `localvar' `localvar'_nw
 		}
 
 		*Save temporary data set
-		tempfile newdata
-		save 	`newdata'
+		tempfile localdata
+		save 	`localdata'
 
 		**************************************
 	  ******** Prepare shared file  ********
@@ -189,17 +189,17 @@ qui {
 		ds
 		local shared_file_vars `r(varlist)'
 
-		* Make a list of all value vars in the new file
+		* Make a list of all value vars in the local file
 		local shared_file_comparevars : list comparevars & shared_file_vars
 
-		* Make a list of all value vars expected in new file but missing
+		* Make a list of all value vars expected in local file but missing
 		local shared_file_miss_comparevars : list comparevars - shared_file_comparevars
 
 		**************************************
 	  ************ Merge files  ************
 		**************************************
 
-		merge 1:1 `idvars' using `newdata', gen(local_shared_merge)
+		merge 1:1 `idvars' using `localdata', gen(local_shared_merge)
 
 
 		**************************************
@@ -218,7 +218,7 @@ qui {
 			local identical = 0
 
 			* Trunctate varaible list if too long
-			str_to_disp, string("`new_file_miss_comparevars'") maxlen(`varlistlenmax')
+			str_to_disp, string("`local_file_miss_comparevars'") maxlen(`varlistlenmax')
 			local varlist_display "`r(str_to_disp)'"
 
 			*Output in result window
@@ -252,7 +252,7 @@ qui {
 			}
 		}
 
-		if "`new_file_miss_comparevars'" == "" & "`shared_file_miss_comparevars'" == "" {
+		if "`local_file_miss_comparevars'" == "" & "`shared_file_miss_comparevars'" == "" {
 			noi di ""
  			noi di "{pstd}All compare variables exist in both files.{p_end}"
 		}
@@ -299,7 +299,7 @@ qui {
 		local allvarsidentical = 1
 
 		* Create a list of variables
-		local comparevars_both_files : list shared_file_comparevars & new_file_comparevars
+		local comparevars_both_files : list shared_file_comparevars & local_file_comparevars
 
 		tempvar same wigglevalue diff
 		gen `same'        = 0
