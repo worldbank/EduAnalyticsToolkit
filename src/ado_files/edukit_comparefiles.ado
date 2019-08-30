@@ -17,8 +17,9 @@ qui {
 		comparevars(string) ///
 		wigglevars(string)  ///
 		wiggleroom(numlist min=1 max=1 >0 <1)  ///
-		listdetail(string)  ///
+		markdown(string)			///
 		varlistlenmax(numlist min=1 max=1 >0) ///
+		mdevensame ///
 		]
 
 	preserve
