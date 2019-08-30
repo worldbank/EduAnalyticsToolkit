@@ -251,17 +251,12 @@ qui {
 
 			* Trunctate varaible list if too long
 			str_to_disp, string("`local_file_miss_comparevars'") maxlen(`varlistlenmax')
-			local varlist_display "`r(str_to_disp)'"
+			local lfile_missvars_str "Value variables are missing in the local file. These variables are missing: `r(str_to_disp)'"
 
 			*Output in result window
 			noi di ""
-			noi disp "{phang}Value variables are missing in the local file. These variables are missing: `varlist_display' {p_end}"
+			noi disp "{phang}`lfile_missvars_str'{p_end}"
 
-			* Out put in file if listdetail option used
-			if "`listdetail'" != "" {
-				file write `filehandle' "shared vars error" _n
-				file write `filehandle' "Expected comparevars missing in local fiel: `new_file_miss_comparevars'" _n
-			}
 		}
 
 		*Export list of compare variables missing in shared file
@@ -270,18 +265,12 @@ qui {
 			local identical = 0
 
 			* Trunctate varaible list if too long
-			str_to_disp, string("`shared_file_miss_comparevars'") maxlen(`varlistlenmax'	)
-			local varlist_display "`r(str_to_disp)'"
+			str_to_disp, string("`shared_file_miss_comparevars'") maxlen(`varlistlenmax')
+			local sfile_missvars_str "Value variables are missing in the shared file. These variables are missing: `r(str_to_disp)'"
 
 			*Output in result window
 			noi di ""
-			noi disp "{phang}Value variables are missing in the shared file. These variables are missing: `varlist_display' {p_end}"
-
-			* Out put in file if listdetail option used
-			if "`listdetail'" != "" {
-				file write `filehandle' "shared vars error" _n
-				file write `filehandle' "Expected comparevars missing in local fiel: `shared_file_miss_comparevars'" _n
-			}
+			noi disp "{phang}`sfile_missvars_str'{p_end}"
 		}
 
 		if "`local_file_miss_comparevars'" == "" & "`shared_file_miss_comparevars'" == "" {
@@ -290,11 +279,11 @@ qui {
 		}
 		noi di ""
 
-		**************************************
-	  ********** Test Difference ***********
-		**************************************
-		****** Different observations ********
-		**************************************
+		if "`markdown'" != "" {
+			markdown_varsexist, filehandle(`filehandle') ///
+			lfile_missvars(`lfile_missvars_str') sfile_missvars(`sfile_missvars_str') ///
+			compvar_str("`compvar_str'")
+		}
 
 
 
@@ -496,4 +485,18 @@ program markdown_obs, rclass
 	file write `filehandle' "|Observations in both files|`obs_both' obs|" _n
 	file write `filehandle' "|Observations only in local file|`obs_only_l' obs|" _n
 	file write `filehandle' "|Observations only in shared file|`obs_only_s' obs|" _n
+end
+
+cap program drop markdown_varsexist
+program markdown_varsexist, rclass
+	syntax , filehandle(string) compvar_str(string) [lfile_missvars(string) sfile_missvars(string)]
+
+	if "`lfile_missvars'" == "" local lfile_missvars "All variables to compare exist in shared file."
+	if "`sfile_missvars'" == "" local sfile_missvars "All variables to compare exist in local file."
+
+	file write `filehandle' "### List compare variables " _n _n
+	file write `filehandle' "`compvar_str'" _n
+	file write `filehandle' "* `lfile_missvars'" _n
+	file write `filehandle' "* `sfile_missvars'" _n _n
+
 end
