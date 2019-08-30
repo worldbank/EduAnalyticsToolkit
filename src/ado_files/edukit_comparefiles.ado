@@ -13,7 +13,9 @@ qui {
 		sharedfile(string)  ///
 		idvars(string)		///
 		[                   ///
-		compareall          ///
+		compareboth          ///
+		comparelocal        ///
+		compareshared       ///
 		comparevars(string) ///
 		wigglevars(string)  ///
 		wiggleroom(numlist min=1 max=1 >0 <1)  ///
@@ -68,16 +70,19 @@ qui {
 			else if _rc confirm file "``file''"
 		}
 
-		* Test that at least comparell or comparevars were used
-		if "`compareall'`comparevars'" == "" {
-			noi di as error "{phang}You must use one of the options {cmd:compareall} or {cmd:comparevars}.{p_end}"
+		* Counting how many compare options are used, only exacly one is allowed
+		local numcomp = (!missing("`compareboth'") + !missing("`comparelocal'") + !missing("`compareshared'") + !missing("`comparevars'"))
+
+		* Test that at least at least one compare option were used
+		if (`numcomp' == 0) {
+			noi di as error "{phang}You must use one of the options {cmd:compareboth}, {cmd:comparelocal}, {cmd:compareshared} or {cmd:comparevars}.{p_end}"
 			error 198
 			exit
 		}
 
-		* Test comparell and comparevars were not both used at the same time
-		if "`compareall'" != "" & "`comparevars'" != "" {
-			noi di as error "{phang}You must not use both options {cmd:compareall} and {cmd:comparevars} at the same time.{p_end}"
+		* Test that exactly one compare option was used
+		if (`numcomp' > 1)  {
+			noi di as error "{phang}You may only use exactly one of the options {cmd:compareboth}, {cmd:comparelocal}, {cmd:compareshared} and {cmd:comparevars}.{p_end}"
 			error 198
 			exit
 		}
@@ -137,9 +142,9 @@ qui {
 			error _rc
 		}
 
-		** If compareall was used, then take all variables from localfile apart
+		** If compareboth was used, then take all variables from localfile apart
 		*  from idvars and add to comparevars
-		if "`compareall'" != "" {
+		if "`compareboth'" != "" {
 			ds `idvars', not
 			local comparevars "`r(varlist)'"
 		}
@@ -209,11 +214,15 @@ qui {
 		**************************************
 
 		noi di ""
-		if ("`compareall'" != "") noi di "{pstd}The option [compareall] was used so all variables in the local file will be compared across the two files.{p_end}"
-		else noi di "{pstd}The variables in [comparevars(`comparevars')] will be compared across the two files.{p_end}"
+		if ("`compareboth'" != "") local compvar_str "The option [compareboth] was used so all variables in the local file will be compared across the two files."
+		else if ("`comparelocal'" != "") local compvar_str "PLACEHOLDER compvar_str"
+		else if ("`compareshared'" != "") local compvar_str "PLACEHOLDER compvar_str"
+		else if ("`comparevars'" != "") local compvar_str "The variables in [comparevars(`comparevars')] will be compared across the two files."
+
+		noi di "{pstd}`compvar_str'{p_end}"
 
 		* Export list of compare variables missing in local file
-		if "`new_file_miss_comparevars'" != "" {
+		if "`local_file_miss_comparevars'" != "" {
 
 			local identical = 0
 
