@@ -101,14 +101,7 @@ qui {
 		*Start by assuming files are identical
 		local identical = 1
 
-		*Prepare a markdown file for listing differences if listdetail is specified
-		if "`listdetail'" != "" {
-			tempname	filehandle
-			tempfile	tmp_mdfile
-			file open  `filehandle' using `tmp_mdfile', write text replace
-			file write `filehandle' "Local  file: `localfile'" _n
-			file write `filehandle' "Shared file: `sharedfile'" _n
-		}
+
 
 		*
 		if "`varlistlenmax'" == "" {
