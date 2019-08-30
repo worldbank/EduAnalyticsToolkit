@@ -206,6 +206,13 @@ qui {
 
 		merge 1:1 `idvars' using `localdata', gen(local_shared_merge)
 
+		tempvar IDstring
+		gen `IDstring' = ""
+		foreach idvar of local idvars {
+			tostring `idvar', replace force
+			replace `IDstring' = `IDstring' + ":" + `idvar'
+		}
+		replace `IDstring' = substr(`IDstring', 2, .)
 
 		**************************************
 		* Test if local file has observations not in shared
@@ -296,13 +303,15 @@ qui {
 		********* Different values ***********
 		**************************************
 
+		noi di ""
+
 		*Keep only observatins in both
 		keep if local_shared_merge == 3
 
 		local N_both `=_N'
 
-		if "`listdetail'" != "" {
-			file write `filehandle' "**Unmatched variables" _n
+		if "`markdown'" != "" {
+			file write `filehandle' "## Variables with missmatches" _n
 		}
 
 		local allvarsidentical = 1
@@ -316,9 +325,6 @@ qui {
 
 		*Loop over all non-idvars
 		foreach compvar of local comparevars_both_files {
-
-			noi di ""
-			noi di "{pstd}`compvar'{p_end}"
 
 			*Reset values for each var
 			replace `same'        = 0
@@ -341,13 +347,15 @@ qui {
 			cap confirm `vartype' variable `compvar'
 			if _rc {
 
+				local identical = 0
+
 				*Output in result window
 				noi disp "{phang}Type miss-missmatch, `vartype' in local file {p_end}"
 
 				* Out put in file if listdetail option used
-				if "`listdetail'" != "" {
-					file write `filehandle' "Variable type miss-match" _n
-					file write `filehandle' "Variable `compvar' is `vartype' in local file but not in shared file." _n
+				if "`markdown'" != "" {
+					file write `filehandle' _n "#### `compvar'" _n
+					file write `filehandle' "**Variable is `vartype' in local file but not in shared file**" _n
 				}
 			}
 
@@ -395,28 +403,24 @@ qui {
 
 					local identical = 0
 
-					noi di "{phang}`count_diff'  miss-match out of `N_both' obs`wigglenote'.{p_end}"
+					noi di "{phang}`compvar' : `count_diff'  miss-match out of `N_both' obs`wigglenote'.{p_end}"
 
-					noi list `idvars' `compvar' `compvar'_nw `diff' if `same' == 0
+					if "`markdown'" != "" {
+						markdown_missmatch_var, filehandle(`filehandle') var(`compvar')
+						forvalues i = 1/`=_N' {
+							if `same'[`i'] != 1 {
+								local sval = `compvar'[`i']
+								local lval = `compvar'_nw[`i']
+								local IDstr = `IDstring'[`i']
+								local diffstr = `diff'[`i']
 
-					if "`listdetail'" != "" {
-
-						*write down the detialed list if listdetail is specified
-						file write `filehandle' "***`compvar'" _n
-						file write `filehandle' "|obs|`compvar'_local|`compvar'_shared|" _n
-						file write `filehandle' "|---|---|---|" _n
-
-						forvalues i = 1/_N {
-							if `same'[`i'] == 1 {
-								local value1 = `compvar'[`i']
-								local value2 = `compvar'_nw[`i']
-								file write `filehandle' "|`i'|`value1'|`value2'|" _n
+								markdown_missmatch_varval, filehandle(`filehandle') sval(`sval') lval(`lval') idstr("`IDstr'") diffstr(`diffstr')
 							}
 						}
 					}
 				}
 				else {
-					noi di "{phang}All `N_both' observations are identical`wigglenote'.{p_end}"
+					noi di "{phang}`compvar' : All `N_both' observations are identical`wigglenote'.{p_end}"
 				}
 			}
 		}  // foreach compvar of local comparevars_both_files
@@ -498,5 +502,23 @@ program markdown_varsexist, rclass
 	file write `filehandle' "`compvar_str'" _n
 	file write `filehandle' "* `lfile_missvars'" _n
 	file write `filehandle' "* `sfile_missvars'" _n _n
+
+end
+
+cap program drop markdown_missmatch_var
+program markdown_missmatch_var, rclass
+	syntax , filehandle(string) var(string)
+
+	file write `filehandle' _n "#### `var'" _n
+	file write `filehandle' "|ID String|Local value|Shared value|diff|" _n
+	file write `filehandle' "|---|---|---|---|" _n
+
+end
+
+cap program drop markdown_missmatch_varval
+program markdown_missmatch_varval, rclass
+	syntax , filehandle(string) sval(string) lval(string) idstr(string) diffstr(string)
+
+	file write `filehandle' "|`idstr'|`lval'|`sval'|`diffstr'|" _n
 
 end
