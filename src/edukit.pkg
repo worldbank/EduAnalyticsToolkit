@@ -5,6 +5,8 @@ d EduAnalytics, World Bank Group (eduanalytics@worldbank.org)
 f /ado_files/edukit.ado
 f /ado_files/edukit_save.ado
 f /ado_files/edukit_datalibweb.ado
+f /ado_files/edukit_comparefiles.ado
+f /ado_files/edukit_rmkdir.ado
 
 f /help_files/edukit.sthlp
 f /help_files/edukit_save.sthlp
