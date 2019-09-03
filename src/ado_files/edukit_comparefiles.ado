@@ -11,8 +11,9 @@ qui {
 	syntax , ///
 		localfile(string)   ///
 		sharedfile(string)  ///
-		idvars(string)		///
 		[                   ///
+		idvars(string)		///
+		idsfromchar(string)  ///
 		compareboth          ///
 		comparelocal        ///
 		compareshared       ///
@@ -88,6 +89,13 @@ qui {
 		}
 
 		* Test comparell and comparevars were not both used at the same time
+		if (!missing("`idvars'") + !missing("`idsfromchar'") != 1) {
+			noi di as error "{phang}You must use one and only one of the options {cmd:idvars()} or {cmd:idsfromchar}.{p_end}"
+			error 198
+			exit
+		}
+
+		* Test comparell and comparevars were not both used at the same time
 		if "`wiggleroom'" != "" & "`wigglevars'" == "" {
 			noi di as error "{phang}You can only use option {cmd:wiggleroom} in combination with option {cmd:wigglevars}.{p_end}"
 			error 198
@@ -128,11 +136,28 @@ qui {
 
 		use "`localfile'", clear
 
+		* Get idvars from char if option idsfromchar is num_obs_only_in_shared
+		if ("`idsfromchar'" != "") {
+			local idvars : char _dta[`idsfromchar']
+			if ("`idvars'" == "") {
+				noi di as error "{pstd}There is no values in _dta[`idsfromchar'] in the local file. Make sure that the char name is correct.{p_end}"
+				error 198
+			}
+		}
+
 		*test that idvars are fully an uniquely identifying
 		cap isid `idvars'
-		if _rc ==459 {
+		if (_rc ==459) {
 			noi di as error "{pstd}Variables [`idvars'] do not fully and uniquely identify the observations in localfile(). The local and shared files can only be compared if they have the same fully and uniquely identifying ID variables.{p_end}"
 			error _rc
+		}
+		else if (_rc == 111) {
+			noi di as error "{pstd}Not all ID variables [`idvars'] exist in the local file. The local and shared files can only be compared if they have the same fully and uniquely identifying ID variables.{p_end}"
+			error _rc
+		}
+		else if (_rc != 0) {
+			noi di as error "{pstd}Error in isid for local file in edukit_comparefiles.ado{p_end}"
+			isid `idvars'
 		}
 
 		** If compareboth was used, then take all variables from localfile apart
@@ -171,11 +196,31 @@ qui {
 
 		use "`sharedfile'", clear
 
+		if ("`idsfromchar'" != "") {
+			local sharedidvars : char _dta[`idsfromchar']
+			if ("`sharedidvars'" == "") {
+				noi di as error "{pstd}There is no values in _dta[`idsfromchar'] in the shared file. Make sure that the char name is correct.{p_end}"
+				error 198
+			}
+			if (`:list sharedidvars === idvars' == 0) {
+				noi di as error "{pstd}The values in _dta[`idsfromchar'] is different in the local file and the shared file. This is not allowed.{p_end}"
+				error 198
+			}
+		}
+
 		*test that idvars are fully an uniqely identiftying
 		cap isid `idvars'
 		if _rc ==459 {
 			noi di as error "{pstd}Variables [`idvars'] do not fully and uniquely identify the observations in sharedfile(). The local and shared files can only be compared if they have the same fully and uniquely identifying ID variables.{p_end}"
 			error _rc
+		}
+		else if (_rc == 111) {
+			noi di as error "{pstd}Not all ID variables [`idvars'] exist in the shared file. The local and shared files can only be compared if they have the same fully and uniquely identifying ID variables.{p_end}"
+			error _rc
+		}
+		else if (_rc != 0) {
+			noi di as error "{pstd}Error in isid for shared file in edukit_comparefiles.ado{p_end}"
+			isid `idvars'
 		}
 
 		*Save the number of obseravations
