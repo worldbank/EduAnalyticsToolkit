@@ -103,13 +103,11 @@ qui {
 		}
 
 		**************************************
-	  *** Set up locals used in command  ***
+	  	*** Set up locals used in command  ***
 		**************************************
 
 		*Start by assuming files are identical
 		local identical = 1
-
-
 
 		*
 		if "`varlistlenmax'" == "" {
@@ -183,7 +181,7 @@ qui {
 
 		*Rename all vars in the local data set (this rename will not be saves)
 		foreach localvar of local local_file_comparevars {
-			rename `localvar' `localvar'_nw
+			rename `localvar' `localvar'__
 		}
 
 		*Save temporary data set
@@ -377,7 +375,7 @@ qui {
 			* Test that variables are the same type
 
 			* Test first what typ var is in local file
-			cap confirm string variable `compvar'_nw
+			cap confirm string variable `compvar'__
 			if !_rc local vartype "string"
 			else local vartype "numeric"
 
@@ -409,22 +407,22 @@ qui {
 
 				if ("`vartype'" == "string") {
 					* String variables tests are srtaight forward
-					replace `same'  = (`compvar' == `compvar'_nw)
+					replace `same'  = (`compvar' == `compvar'__)
 				}
 				else if (`thisvar_wigglevar'==0) {
 					* Numeric without wiggle room is straightforward
-					replace `same'  = (`compvar' == `compvar'_nw)
+					replace `same'  = (`compvar' == `compvar'__)
 				}
 				else {
 
 					*Take the biggest value of the two vars and calculate absolute wiggle room from wiggle percent
-					replace `wigglevalue' = max(abs(`compvar'),abs(`compvar'_nw)) * `wiggleroom'
+					replace `wigglevalue' = max(abs(`compvar'),abs(`compvar'__)) * `wiggleroom'
 
 					*Numeric varaibles are allowed to be .01% off by default (rounding errors, rand noise, export/import errors)
-					replace `same'  = ( abs(`compvar' -`compvar'_nw)  < `wigglevalue')
+					replace `same'  = ( abs(`compvar' -`compvar'__)  < `wigglevalue')
 
 					* Missing values in both files is still same.
-					replace `same'  = 1 if missing(`compvar') & missing(`compvar'_nw)
+					replace `same'  = 1 if missing(`compvar') & missing(`compvar'__)
 				}
 
 
@@ -437,7 +435,7 @@ qui {
 				if `count_diff' > 0 {
 
 					if  "`vartype'" == "string" gen `diff' = "N/A"
-					else gen `diff' = abs(`compvar' - `compvar'_nw)
+					else gen `diff' = abs(`compvar' - `compvar'__)
 
 					local identical = 0
 
@@ -448,7 +446,7 @@ qui {
 						forvalues i = 1/`=_N' {
 							if `same'[`i'] != 1 {
 								local sval = `compvar'[`i']
-								local lval = `compvar'_nw[`i']
+								local lval = `compvar'__[`i']
 								local IDstr = `IDstring'[`i']
 								local diffstr = `diff'[`i']
 
