@@ -2,10 +2,10 @@
 cap program drop 	edukit_dlwcheck
 program define	edukit_dlwcheck, rclass
 qui {
-  syntax , hlodatabase(string) [country(string) survey(string) reportfolder(string)]
+  syntax , cntfolder(string) [country(string) survey(string) reportfolder(string)]
 
   *Build the basefolder
-  local basefolder "`hlodatabase'"
+  local basefolder "`cntfolder'"
   if "`country'" != ""  local basefolder "`basefolder'/`country'"
   if "`survey'" != ""   local basefolder "`basefolder'/`survey'"
 
@@ -146,6 +146,7 @@ qui {
   }
 
   noi end_output_and_file, handle(`handle') tempfilename(`smclReport') reportfolder(`"`reportfolder'"') timestamp(`timestamp')
+
 }
 end
 
@@ -472,25 +473,28 @@ end
 cap program drop end_output_and_file
 program define	 end_output_and_file, rclass
 qui {
-    syntax, handle(string) tempfilename(string) timestamp(string) reportfolder(string)
+    syntax, handle(string) tempfilename(string) timestamp(string) [reportfolder(string)]
 
     local end_of_table "{col 4}{c BLC}{hline 60}"
 
     *Write the beginning of the table
     noi di "`end_of_table'"
 
-    *Write output in report file
-    file write  `handle' `"`end_of_table'"' _n _n _n
+    if ("`reportfolder'" != "") {
 
-    *Closing the new main master dofile handle
-    file close 		`handle'
+        *Write output in report file
+        file write  `handle' `"`end_of_table'"' _n _n _n
 
-    *Copy the new master dofile from the tempfile to the original position
-    copy "`tempfilename'"  `"`reportfolder'/test.smcl"' , replace
+        *Closing the new main master dofile handle
+        file close 		`handle'
 
-    translate "`tempfilename'" `"`reportfolder'/HLO_FOLDER_REPORT_`timestamp'.txt"', trans(smcl2txt) replace linesize(200)
+        *Copy the new master dofile from the tempfile to the original position
+        copy "`tempfilename'"  `"`reportfolder'/test.smcl"' , replace
 
-    noi di ""
-    noi di `"{pstd}Report written to: {browse "`reportfolder'/HLO_FOLDER_REPORT_`timestamp'.txt":`reportfolder'/HLO_FOLDER_REPORT_`timestamp'.txt}{p_end}"'
+        translate "`tempfilename'" `"`reportfolder'/HLO_FOLDER_REPORT_`timestamp'.txt"', trans(smcl2txt) replace linesize(220)
+
+        noi di ""
+        noi di `"{pstd}Report written to: {browse "`reportfolder'/HLO_FOLDER_REPORT_`timestamp'.txt":`reportfolder'/HLO_FOLDER_REPORT_`timestamp'.txt}{p_end}"'
+    }
 }
 end
