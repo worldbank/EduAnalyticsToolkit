@@ -5,7 +5,7 @@ qui {
   syntax , cntfolder(string) [country(string) survey(string) reportfolder(string) showoptional]
 
   *Build the basefolder
-  local basefolder "`cntfolder'"
+  local basefolder = subinstr("`cntfolder'","\","/",.)
   if "`country'" != ""  local basefolder "`basefolder'/`country'"
   if "`survey'" != ""   local basefolder "`basefolder'/`survey'"
 
@@ -338,7 +338,15 @@ qui {
 
   *If the Data folder did no exist, then it does not make sense to check subfolders
   if strpos("`existing_expected_folders'","Data") != 0 {
-      noi list_invalid_and_missing_folders , handle(`handle') folder(`"`rawfolder'/Data"') expectedfolders("Original Stata")
+      noi list_invalid_and_missing_folders , handle(`handle') folder(`"`rawfolder'/Data"') expectedfolders("Original Stata") filesnone
+      local existing_Data_folders `r(existing_expected_folders)'
+
+      if strpos("`existing_Data_folders'","Original") != 0 {
+          noi list_invalid_and_missing_files, handle(`handle') folder(`"`rawfolder'/Data/Original"') filesany
+      }
+      if strpos("`existing_Data_folders'","Stata") != 0 {
+          noi list_invalid_and_missing_files, handle(`handle') folder(`"`rawfolder'/Data/Stata"') filepatterns("*.dta *.DTA")
+      }
   }
 
   *If the Doc folder did no exist, then it does not make sense to check subfolders
@@ -364,10 +372,16 @@ qui {
 
   *If the Data folder did no exist, then it does not make sense to check subfolders
   if strpos("`existing_expected_folders'","Data") != 0 {
-      noi list_invalid_and_missing_folders , handle(`handle') folder(`"`gladfolder'/Data"') expectedfolders("Harmonized")
+      noi list_invalid_and_missing_folders , handle(`handle') folder(`"`gladfolder'/Data"') expectedfolders("Harmonized") filesnone
+      local existing_Data_folders `r(existing_expected_folders)'
+
+      * If folder GLAD/Data/Harmonized exist, makes sure that the ALL, All-Base and CLO file is there and nothing else
+      if strpos("`existing_Data_folders'","Harmonized") != 0 {
+          *Get the exact file prefix from the gladfolder
+          local fileprefix = substr("`gladfolder'",strlen("`gladfolder'")-strpos(strreverse("`gladfolder'"),"/")+2,.)
+          noi list_invalid_and_missing_files, handle(`handle') folder(`"`gladfolder'/Data/Harmonized"') files("`fileprefix'_ALL-BASE.dta `fileprefix'_ALL.dta `fileprefix'_CLO.dta")
+      }
   }
-}
-end
 
   * If folder GLAD/Data/Programs exist, makes sure that there are at least one do file there, and no other files
   if strpos("`existing_expected_folders'","Programs") != 0 {
@@ -393,7 +407,20 @@ qui {
 
   *If the Data folder did no exist, then it does not make sense to check subfolders
   if strpos("`existing_expected_folders'","Data") != 0 {
-      noi list_invalid_and_missing_folders , handle(`handle') folder(`"`hlofolder'/Data"') expectedfolders("Indicators")
+      noi list_invalid_and_missing_folders , handle(`handle') folder(`"`hlofolder'/Data"') expectedfolders("Indicators") filesnone
+      local existing_Data_folders `r(existing_expected_folders)'
+
+      * If folder HLO/Data/Indicators exist, makes sure that the ALL file is there and nothing else
+      if strpos("`existing_Data_folders'","Indicators") != 0 {
+          *Get the exact file prefix from the gladfolder
+          local fileprefix = substr("`hlofolder'",strlen("`hlofolder'")-strpos(strreverse("`hlofolder'"),"/")+2,.)
+          noi list_invalid_and_missing_files, handle(`handle') folder(`"`hlofolder'/Data/Indicators"') files("`fileprefix'_ALL.dta")
+      }
+  }
+
+  * If folder GLAD/Data/Programs exist, makes sure that there are at least one do file there, and no other files
+  if strpos("`existing_expected_folders'","Programs") != 0 {
+      noi list_invalid_and_missing_files, handle(`handle') folder(`"`hlofolder'/Data/Indicators"') filepatterns("*.do")
   }
 }
 end
@@ -427,12 +454,72 @@ qui {
 
   *Output the missing expected folders
   foreach missing_folder of local missing_folders {
-
     noi write_to_output_and_file, handle(`handle') output(`"{col 4}{c |}{col 8}MISSING FOLDER: {col 28}[`folder'/`missing_folder']"')
   }
 
+  *If this folder is suppsoed to have have no files, then test that
+  if ("`filesnone'" != "") noi list_invalid_and_missing_files, handle(`handle') folder(`"`folder'"') filesnone
+
   *Return a local with all existing folders after this command ran, in case subsequent commands
   return local existing_expected_folders : list expectedfolders & all_folders
+}
+end
+
+**This command compares exisitng list of folders with
+* list of expected folders, and output missing and invalid folders.
+cap program drop list_invalid_and_missing_files
+program define	 list_invalid_and_missing_files, rclass
+qui {
+  syntax, handle(string) folder(string) [filesnone filesany filepatterns(string) files(string)]
+
+  * Test syntax during testing
+  if (!missing("`filesnone'") + !missing("`filesany'") + !missing("`filepatterns'") + !missing("`files'") != 1 ) {
+      noi di as error "{pstd}One and exactly one of filesnone, filesany, filepatterns, files must be used.{p_end}"
+      error 198
+  }
+
+  * Create local with all files
+  local all_files : dir `"`folder'"' files "*", respectcase
+
+  * If any files of any sort should be here but none are here, output error
+  if ("`filesany'" != "") {
+      if (`"`all_files'"' == "") noi write_to_output_and_file, handle(`handle') output(`"{col 4}{c |}{col 8}FOLDER INVALIDLY EMPTY: {col 28}[`folder']"')
+  }
+  else if ("`filepatterns'" != "" & `"`all_files'"' == "") {
+      noi write_to_output_and_file, handle(`handle') output(`"{col 4}{c |}{col 8}FOLDER INVALIDLY EMPTY: {col 28}[`folder']"')
+  }
+  else {
+      ************
+      * For the different option determine the expected files
+
+      *option filespattern used: All files on the given pattern are expected
+      if ("`filepatterns'" != "") {
+          foreach filepattern of local filepatterns {
+              local these_expected_files : dir `"`folder'"' files "`filepattern'", respectcase
+              local expected_files : list these_expected_files | expected_files
+          }
+      }
+      *option files used: Exactly the files in option files are expected
+      else if ("`files'" != "")     local expected_files "`files'"
+      *option filesnone used: No files are expected
+      else if ("`filesnone'" != "") local expected_files ""
+
+      * Removing expected files from the list of existing files, leaves us with the invalid files
+      local invalid_files : list all_files - expected_files
+
+      * Removing existing files from the list of expected files, leaves us with the missing expected files
+      local missing_files : list expected_files - all_files
+
+      *Output the invalid files
+      foreach invalid_file of local invalid_files {
+        noi write_to_output_and_file, handle(`handle') output(`"{col 4}{c |}{col 8}INVALID FILE: {col 28}[`folder'/`invalid_file']"')
+      }
+
+      *Output the missing expected files
+      foreach missing_file of local missing_files {
+        noi write_to_output_and_file, handle(`handle') output(`"{col 4}{c |}{col 8}MISSING FILE: {col 28}[`folder'/`missing_file']"')
+      }
+  }
 }
 end
 
