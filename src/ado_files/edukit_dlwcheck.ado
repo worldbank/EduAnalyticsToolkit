@@ -259,17 +259,17 @@ qui {
 
       local validfolders "`validfolders' `r(validfolders)'"
 
-      *Loop over the vintages for which there are EDURAW collections and test that there are GLAD, CLO and HLO folders for all of them
+      *Loop over the vintages for which there are EDURAW collections and test that there are GLAD and HLO folders for all of them
       foreach vintage in `r(master_vintages)' {
-          *All versions of the GLAD collection in this survey folder
+          *All vintaged versions of the GLAD collection in this survey folder
           noi check_collection , handle(`handle') surveyfolder(`"`surveyfolder'"') collection("GLAD") fld_pattern("`survey'_`vintage'_M_v*_A_GLAD") `optional'
           local validfolders "`validfolders' `r(validfolders)'"
 
-          *All versions of the CLO collection in this survey folder
+          *All wrk versions of the GLAD collection in this survey folder
           noi check_collection , handle(`handle') surveyfolder(`"`surveyfolder'"') collection("GLAD") fld_pattern("`survey'_`vintage'_M_wrk_A_GLAD") `optional'
           local validfolders "`validfolders' `r(validfolders)'"
 
-          *All versions of the HLO collection in this survey folder
+          *All vintaged versions of the HLO collection in this survey folder
           noi check_collection , handle(`handle') surveyfolder(`"`surveyfolder'"') collection("HLO") fld_pattern("`survey'_`vintage'_M_v*_A_HLO") `optional'
           local validfolders "`validfolders' `r(validfolders)'"
 
@@ -369,23 +369,9 @@ qui {
 }
 end
 
-* Check for expected and invalid folders and files specific to the CLO collections
-cap program drop checkclo
-program define	 checkclo, rclass
-qui {
-  syntax, handle(string) surveyfolder(string) folder(string)
-
-  *Create the foldre local for this collection
-  local clofolder `"`surveyfolder'/`folder'"'
-
-  *List all expteced folders that do not exist, and all existing folders
-  *that were not expected. Create missing expected folders if creaetmissing is used.
-  noi list_invalid_and_missing_folders , handle(`handle') folder(`"`clofolder'"') expectedfolders("Data")
-  local existing_expected_folders `r(existing_expected_folders)'
-
-  *If the Data folder did no exist, then it does not make sense to check subfolders
-  if strpos("`existing_expected_folders'","Data") != 0 {
-      noi list_invalid_and_missing_folders , handle(`handle') folder(`"`clofolder'/Data"') expectedfolders("Indicators")
+  * If folder GLAD/Data/Programs exist, makes sure that there are at least one do file there, and no other files
+  if strpos("`existing_expected_folders'","Programs") != 0 {
+      noi list_invalid_and_missing_files, handle(`handle') folder(`"`gladfolder'/Data/Harmonized"') filepatterns("*.do")
   }
 }
 end
