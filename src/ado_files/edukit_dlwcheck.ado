@@ -2,7 +2,7 @@
 cap program drop 	edukit_dlwcheck
 program define	edukit_dlwcheck, rclass
 qui {
-  syntax , cntfolder(string) [country(string) survey(string) reportfolder(string)]
+  syntax , cntfolder(string) [country(string) survey(string) reportfolder(string) showoptional]
 
   *Build the basefolder
   local basefolder "`cntfolder'"
@@ -47,6 +47,10 @@ qui {
       error 198
     }
   }
+
+  * Handle option that force that optional folders are still shown
+  if ("`showoptional'" == "") local optional "optional"
+  else local optional ""
 
   /***********************************
   ************************************
@@ -99,7 +103,7 @@ qui {
 
     *Loop over all valid country folders, and run
     foreach country_dir of local valid_country_folders {
-      noi test_countryfolder, handle(`handle') countryfolder("`basefolder'/`country_dir'") country("`country_dir'") valid_abbreviations("`valid_abbreviations'") valid_assessments("`valid_assessments'")
+      noi test_countryfolder, handle(`handle') countryfolder("`basefolder'/`country_dir'") country("`country_dir'") valid_abbreviations("`valid_abbreviations'") valid_assessments("`valid_assessments'") `optional'
     }
   }
 
@@ -113,7 +117,7 @@ qui {
   *Only one single country folder are listed
   else if ("`country'" != "" & "`survey'" == "") {
 
-    noi test_countryfolder ,handle(`handle') countryfolder("`basefolder'") country("`country'") valid_abbreviations("`valid_abbreviations'") valid_assessments("`valid_assessments'")
+    noi test_countryfolder ,handle(`handle') countryfolder("`basefolder'") country("`country'") valid_abbreviations("`valid_abbreviations'") valid_assessments("`valid_assessments'") `optional'
   }
 
   ************************************
@@ -135,7 +139,7 @@ qui {
     noi write_to_output_and_file, handle(`handle') output("{col 4}{c |}")
 
 	*Test this survey only
-    noi test_surveyfolder , handle(`handle') surveyfolder("`basefolder'") survey("`survey'") country("`country'") valid_abbreviations("`valid_abbreviations'") valid_assessments("`valid_assessments'")
+    noi test_surveyfolder , handle(`handle') surveyfolder("`basefolder'") survey("`survey'") country("`country'") valid_abbreviations("`valid_abbreviations'") valid_assessments("`valid_assessments'") `optional'
   }
 
   else {
@@ -161,7 +165,7 @@ end
 cap program drop test_countryfolder
 program define	 test_countryfolder, rclass
 qui {
-  syntax , handle(string) countryfolder(string) country(string) valid_abbreviations(string) valid_assessments(string)
+  syntax , handle(string) countryfolder(string) country(string) valid_abbreviations(string) valid_assessments(string) [optional]
 
   noi write_to_output_and_file, handle(`handle') output("{col 4}{c LT}{hline 40}")
   noi write_to_output_and_file, handle(`handle') output("{col 4}{c |}")
@@ -186,8 +190,7 @@ qui {
   else {
     *Loop over all survey folders
     foreach surveyfolder of local surveyfolders {
-
-      noi test_surveyfolder , handle(`handle') surveyfolder("`countryfolder'/`surveyfolder'") survey("`surveyfolder'") country(`country') valid_abbreviations(`valid_abbreviations') valid_assessments("`valid_assessments'")
+      noi test_surveyfolder , handle(`handle') surveyfolder("`countryfolder'/`surveyfolder'") survey("`surveyfolder'") country(`country') valid_abbreviations(`valid_abbreviations') valid_assessments("`valid_assessments'") `optional'
     }
   }
 }
@@ -197,7 +200,7 @@ end
 cap program drop test_surveyfolder
 program define	 test_surveyfolder, rclass
 qui {
-  syntax , handle(string) surveyfolder(string) survey(string) country(string) valid_abbreviations(string) valid_assessments(string)
+  syntax , handle(string) surveyfolder(string) survey(string) country(string) valid_abbreviations(string) valid_assessments(string) [optional]
 
   noi write_to_output_and_file, handle(`handle') output("{col 4}{c LT}{hline 40}")
   noi write_to_output_and_file, handle(`handle') output("{col 4}{c |}{col 6}`survey'")
@@ -252,22 +255,26 @@ qui {
 	  local validfolders ""
 
 	  *All versions of the EDURAW collection in this survey folder
-	  noi check_collection , handle(`handle') surveyfolder(`"`surveyfolder'"') collection("RAW")  fld_pattern("`survey'_v*_M")
+	  noi check_collection , handle(`handle') surveyfolder(`"`surveyfolder'"') collection("RAW")  fld_pattern("`survey'_v*_M") `optional'
 
       local validfolders "`validfolders' `r(validfolders)'"
 
       *Loop over the vintages for which there are EDURAW collections and test that there are GLAD, CLO and HLO folders for all of them
       foreach vintage in `r(master_vintages)' {
           *All versions of the GLAD collection in this survey folder
-          noi check_collection , handle(`handle') surveyfolder(`"`surveyfolder'"') collection("GLAD") fld_pattern("`survey'_`vintage'_M_v*_A_GLAD")
+          noi check_collection , handle(`handle') surveyfolder(`"`surveyfolder'"') collection("GLAD") fld_pattern("`survey'_`vintage'_M_v*_A_GLAD") `optional'
           local validfolders "`validfolders' `r(validfolders)'"
 
           *All versions of the CLO collection in this survey folder
-          noi check_collection , handle(`handle') surveyfolder(`"`surveyfolder'"') collection("CLO") fld_pattern("`survey'_`vintage'_M_v*_A_CLO")
+          noi check_collection , handle(`handle') surveyfolder(`"`surveyfolder'"') collection("GLAD") fld_pattern("`survey'_`vintage'_M_wrk_A_GLAD") `optional'
           local validfolders "`validfolders' `r(validfolders)'"
 
           *All versions of the HLO collection in this survey folder
-          noi check_collection , handle(`handle') surveyfolder(`"`surveyfolder'"') collection("HLO") fld_pattern("`survey'_`vintage'_M_v*_A_HLO")
+          noi check_collection , handle(`handle') surveyfolder(`"`surveyfolder'"') collection("HLO") fld_pattern("`survey'_`vintage'_M_v*_A_HLO") `optional'
+          local validfolders "`validfolders' `r(validfolders)'"
+
+          *All wrk versions of the HLO collection in this survey folder
+          noi check_collection , handle(`handle') surveyfolder(`"`surveyfolder'"') collection("HLO") fld_pattern("`survey'_`vintage'_M_v*_A_HLO") `optional'
           local validfolders "`validfolders' `r(validfolders)'"
       }
 
@@ -276,7 +283,7 @@ qui {
       }
 
 	  *Output a list of all folders in the survey-level folder that are invalid, these are all non-collection folders directly under the survey folder.
-	  noi list_invalid_and_missing_folders , handle(`handle') folder(`"`surveyfolder'"') expectedfolders(`"`validfolders'"')
+	  noi list_invalid_and_missing_folders , handle(`handle') folder(`"`surveyfolder'"') expectedfolders(`"`validfolders'"') `optional'
 
   }
 }
@@ -286,7 +293,7 @@ end
 cap program drop check_collection
 program define	 check_collection, rclass
 qui {
-  syntax , handle(string) surveyfolder(string)  fld_pattern(string) collection(string)
+  syntax , handle(string) surveyfolder(string)  fld_pattern(string) collection(string) [optional]
 
   *List all the vintages for this collection. In most cases there will only be vintage
   *version 01, but it could be any number of vintages for each collection.
@@ -294,10 +301,9 @@ qui {
 
   *Loop over each collection folder (only one folder if only version 01), and apply to corresponding checek
   foreach collection_folder of local collection_folders {
-    if "`collection'" == "RAW"  noi checkraw  , handle(`handle') surveyfolder(`"`surveyfolder'"') folder("`collection_folder'")
-    if "`collection'" == "GLAD" noi checkglad , handle(`handle') surveyfolder(`"`surveyfolder'"') folder("`collection_folder'")
-    if "`collection'" == "CLO"  noi checkclo  , handle(`handle') surveyfolder(`"`surveyfolder'"') folder("`collection_folder'")
-    if "`collection'" == "HLO"  noi checkhlo  , handle(`handle') surveyfolder(`"`surveyfolder'"') folder("`collection_folder'")
+    if "`collection'" == "RAW"  noi checkraw  , handle(`handle') surveyfolder(`"`surveyfolder'"') folder("`collection_folder'") `optional'
+    if "`collection'" == "GLAD" noi checkglad , handle(`handle') surveyfolder(`"`surveyfolder'"') folder("`collection_folder'") `optional'
+    if "`collection'" == "HLO"  noi checkhlo  , handle(`handle') surveyfolder(`"`surveyfolder'"') folder("`collection_folder'") `optional'
 
     * Collect and pass back all the master vintages that already exists
     if "`collection'" == "RAW" {
@@ -320,14 +326,14 @@ end
 cap program drop checkraw
 program define	 checkraw, rclass
 qui {
-  syntax, handle(string)  surveyfolder(string) folder(string)
+  syntax, handle(string)  surveyfolder(string) folder(string) [optional]
 
   *Create the foldre local for this collection
   local rawfolder `"`surveyfolder'/`folder'"'
 
   *List all expteced folders that do not exist, and all existing folders
   *that were not expected. Create missing expected folders if creaetmissing is used.
-  noi list_invalid_and_missing_folders , handle(`handle') folder(`"`rawfolder'"') expectedfolders("Data Codebook Doc")
+  noi list_invalid_and_missing_folders , handle(`handle') folder(`"`rawfolder'"') expectedfolders("Data") optionalfolders("Codebook Doc") filesnone `optional'
   local existing_expected_folders `r(existing_expected_folders)'
 
   *If the Data folder did no exist, then it does not make sense to check subfolders
@@ -337,7 +343,7 @@ qui {
 
   *If the Doc folder did no exist, then it does not make sense to check subfolders
   if strpos("`existing_expected_folders'","Doc") != 0 {
-      noi list_invalid_and_missing_folders , handle(`handle') folder(`"`rawfolder'/Doc"') expectedfolders("Questionnaires Reports Technical")
+      noi list_invalid_and_missing_folders , handle(`handle') folder(`"`rawfolder'/Doc"') optionalfolders("Questionnaires Reports Technical") filesnone `optional'
   }
 }
 end
@@ -346,14 +352,14 @@ end
 cap program drop checkglad
 program define	 checkglad, rclass
 qui {
-  syntax, handle(string) surveyfolder(string) folder(string)
+  syntax, handle(string) surveyfolder(string) folder(string) [optional]
 
   *Create the foldre local for this collection
   local gladfolder `"`surveyfolder'/`folder'"'
 
   *List all expteced folders that do not exist, and all existing folders
   *that were not expected. Create missing expected folders if creaetmissing is used.
-  noi list_invalid_and_missing_folders , handle(`handle') folder(`"`gladfolder'"') expectedfolders("Data Programs")
+  noi list_invalid_and_missing_folders , handle(`handle') folder(`"`gladfolder'"') expectedfolders("Data") optionalfolders("Programs") filesnone `optional'
   local existing_expected_folders `r(existing_expected_folders)'
 
   *If the Data folder did no exist, then it does not make sense to check subfolders
@@ -389,14 +395,14 @@ end
 cap program drop checkhlo
 program define	 checkhlo, rclass
 qui {
-  syntax, handle(string) surveyfolder(string) folder(string)
+  syntax, handle(string) surveyfolder(string) folder(string) [optional]
 
   *Create the foldre local for this collection
   local hlofolder `"`surveyfolder'/`folder'"'
 
   *List all expteced folders that do not exist, and all existing folders
   *that were not expected. Create missing expected folders if creaetmissing is used.
-  noi list_invalid_and_missing_folders , handle(`handle') folder(`"`hlofolder'"') expectedfolders("Data")
+  noi list_invalid_and_missing_folders , handle(`handle') folder(`"`hlofolder'"') expectedfolders("Data") optionalfolders("Programs") filesnone `optional'
   local existing_expected_folders `r(existing_expected_folders)'
 
   *If the Data folder did no exist, then it does not make sense to check subfolders
@@ -411,13 +417,19 @@ end
 cap program drop list_invalid_and_missing_folders
 program define	 list_invalid_and_missing_folders, rclass
 qui {
-  syntax, handle(string) folder(string) expectedfolders(string)
+  syntax, handle(string) folder(string) [expectedfolders(string) optionalfolders(string) filesnone optional]
+
+  *If optional is not used, then also optional folders are expected
+  if ("`optional'" == "") {
+      local expectedfolders : list expectedfolders | optionalfolders
+  }
 
   * Create local with all folders
   local all_folders : dir `"`folder'"' dirs "*", respectcase
 
-  * Removing expected folders from the list of existing folders, leaves us with the invalid folders
+  * Removing expected and optional folders from the list of existing folders, leaves us with the invalid folders
   local invalid_folders : list all_folders - expectedfolders
+  local invalid_folders : list invalid_folders - optionalfolders
 
   * Removing existing folders from the list of expected folders, leaves us with the missing expected folders
   local missing_folders : list expectedfolders - all_folders
