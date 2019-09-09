@@ -20,7 +20,7 @@ qui {
 		comparevars(string) ///
 		wigglevars(string)  ///
 		wiggleroom(numlist min=1 max=1 >0 <1)  ///
-		markdown(string)			///
+		mdreport(string)			///
 		varlistlenmax(numlist min=1 max=1 >0) ///
 		mdevensame ///
 		]
@@ -30,7 +30,7 @@ qui {
 	noi di ""
 
 	*Prepare a markdown file for listing differences if listdetail is specified
-	if "`markdown'" != "" {
+	if "`mdreport'" != "" {
 		tempname	filehandle
 		tempfile	tmp_mdfile
 		file open  `filehandle' using `tmp_mdfile', write text replace
@@ -58,9 +58,9 @@ qui {
 				noi di "{phang}The file used in option `file'() is not found. Check if this file path is correct: ``file''.{p_end}"
 
 				* Out put in file if listdetail option used
-				if "`markdown'" != "" {
+				if "`mdreport'" != "" {
 					file write `filehandle' _n "#### Shared file does not exist" _n
-					markdown_writefile , filehandle(`filehandle') markdownfile("`markdown'") markdowntemp("`tmp_mdfile'")
+					markdown_writefile , filehandle(`filehandle') markdownfile("`mdreport'") markdowntemp("`tmp_mdfile'")
 				}
 
 				return local identical 0
@@ -266,7 +266,7 @@ qui {
 		noi di "{pstd}In shared file only: `num_obs_only_in_shared' obs.{p_end}"
 
 
-		if "`markdown'" != "" {
+		if "`mdreport'" != "" {
 			markdown_obs, filehandle(`filehandle') ///
 			obs_in_lfile(`obs_in_local_file') obs_in_sfile(`obs_in_shared_file') ///
 			obs_both(`num_obs_both') obs_only_l(`num_obs_only_in_local') obs_only_s(`num_obs_only_in_shared')
@@ -322,7 +322,7 @@ qui {
 		}
 		noi di ""
 
-		if "`markdown'" != "" {
+		if "`mdreport'" != "" {
 			markdown_varsexist, filehandle(`filehandle') ///
 			lfile_missvars(`lfile_missvars_str') sfile_missvars(`sfile_missvars_str') ///
 			compvar_str("`compvar_str'")
@@ -346,7 +346,7 @@ qui {
 
 		local N_both `=_N'
 
-		if "`markdown'" != "" {
+		if "`mdreport'" != "" {
 			file write `filehandle' "## Variables with missmatches" _n
 		}
 
@@ -389,7 +389,7 @@ qui {
 				noi disp "{phang}Type miss-missmatch, `vartype' in local file {p_end}"
 
 				* Out put in file if listdetail option used
-				if "`markdown'" != "" {
+				if "`mdreport'" != "" {
 					file write `filehandle' _n "#### `compvar'" _n
 					file write `filehandle' "**Variable is `vartype' in local file but not in shared file**" _n
 				}
@@ -441,7 +441,7 @@ qui {
 
 					noi di "{phang}`compvar' : `count_diff'  miss-match out of `N_both' obs`wigglenote'.{p_end}"
 
-					if "`markdown'" != "" {
+					if "`mdreport'" != "" {
 						markdown_missmatch_var, filehandle(`filehandle') var(`compvar')
 						forvalues i = 1/`=_N' {
 							if `same'[`i'] != 1 {
@@ -461,8 +461,8 @@ qui {
 			}
 		}  // foreach compvar of local comparevars_both_files
 
-	if "`markdown'" != "" & ("`mdevensame'" != "" | `identical' == 0) {
-		markdown_writefile , filehandle(`filehandle') markdownfile("`markdown'") markdowntemp("`tmp_mdfile'")
+	if "`mdreport'" != "" & ("`mdevensame'" != "" | `identical' == 0) {
+		markdown_writefile , filehandle(`filehandle') markdownfile("`mdreport'") markdowntemp("`tmp_mdfile'")
 	}
 
 	restore
