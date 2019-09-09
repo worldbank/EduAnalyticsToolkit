@@ -6,7 +6,7 @@
 {title:Title}
 
 {pstd}
-{hi:edukit_dlwcheck} {hline 2} Validates file and folders structure in EduAnalytcis' {help datalibweb:DatalibWeb} folder.
+{hi:edukit_dlwcheck} {hline 2} Validates file and folders structures in EduAnalytcis' {help datalibweb:DatalibWeb} folder.
 
 {title:Syntax}
 
@@ -25,7 +25,7 @@
 {syntab :Optional}
 {synopt :{opt country(string)}}Validates file and folders for only one {bf:country}{p_end}
 {synopt :{opt survey(string)}}Validates file and folders for only one {bf:survey}{p_end}
-{synopt :{opt reportfolder(filepath)}}File path to where the .md report will be saved{p_end}
+{synopt :{opt reportfolder(filepath)}}File path to where the .txt report will be saved{p_end}
 {synopt :{opt showoptional}}Show also optional folders that are missing{p_end}
 
 {synoptline}
@@ -35,7 +35,7 @@
 
 {pstd}{cmd:edukit_dlwcheck} is a command very specific to our work in EduAnalytcis, and might not be applicable in any other case outside our team. We regardless want to want to publish it so that anyone can draw inspiration from it and perhaps even use it.{p_end}
 
-{pstd}The command loops over all content of the {it:CNT} folder and validates its content. The {it:CNT} folder is the top folder in the drive where EduAnalytics stores files for datalibweb. In the {it:CNT} folder there are region and country folders, and in the region and country folders there are survey folders. The default behavior of this command is to validate the content of all region and country folders, but using the {opt country()} option the command can be run on all survey folders for a single country only, or by suing the {opt survey()} option the command can be run on a single survey folder only.{p_end}
+{pstd}The command loops over all content of the {it:CNT} folder and validates its content. The {it:CNT} folder is the top folder in the drive where EduAnalytics stores files for DatalibWeb. In the {it:CNT} folder there are region and country folders, and in the region and country folders there are survey folders. The default behavior of this command is to validate the content of all region and country folders, but using the {opt country()} option the command can be run on all survey folders for a single country only, or by using the {opt survey()} option the command can be run on a single survey folder only.{p_end}
 
 {pstd}When the command validates the content of a folder and its subfolders it performs the following tests:{p_end}
 
@@ -51,7 +51,7 @@
 
 {dlgtab:Required}
 
-{phang}{opt cntfolder(filepath)} specifies the full folder path to the {it:CNT} root folder. This is typically the folder on the network drive where datalibweb is reading the EduAnalytics data from. This command will not generate, alter or modify anything in this folder (unless the {opt reportfolder()} option is used to intentionally do so).{p_end}
+{phang}{opt cntfolder(filepath)} specifies the full folder path to the {it:CNT} root folder. This is typically the folder on the network drive where DatalibWeb is reading the EduAnalytics data from, but could just as well be a local path where you want to test folders yet to be published to DatalibWeb. The command will not generate, modify or delete anything in this folder (unless the {opt reportfolder()} option is used to intentionally create reports in this folder).{p_end}
 
 {dlgtab:Optional}
 
@@ -62,7 +62,6 @@
 {phang}{opt reportfolder(filepath)}The full folder path to where the report will be saved. If the option is omitted then no report is generated.{p_end}
 
 {phang}{opt showoptional} includes optional folders in the output. Sub-folders in collections can be either optional or required. If optional folders are missing they are by default not listed in the output. Optional folders are also listed if this option is used.{p_end}
-
 
 {title:Acknowledgements}
 
