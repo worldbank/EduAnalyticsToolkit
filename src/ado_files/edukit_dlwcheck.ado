@@ -4,6 +4,11 @@ program define	edukit_dlwcheck, rclass
 qui {
   syntax , cntfolder(string) [country(string) survey(string) reportfolder(string) showoptional]
 
+  *Get the country abbreviation from survey name if not specified
+  if ("`country'" == "") & ("`survey'" != "") {
+      local country = substr("`survey'", 1,3)
+  }
+
   *Build the basefolder
   local basefolder = subinstr("`cntfolder'","\","/",.)
   if "`country'" != ""  local basefolder "`basefolder'/`country'"
@@ -24,12 +29,6 @@ qui {
   /***********************************
     Test user input
   ***********************************/
-
-  *Test that country is specified if survey is specified
-  if ("`country'" == "") & ("`survey'" != "") {
-    noi di as error "{pstd}If you are specifying a survey you must also specify the country.{p_end}"
-    error 198
-  }
 
   *Test that the basefolder exist
   mata : st_numscalar("r(dirExist)", direxists("`basefolder'"))
