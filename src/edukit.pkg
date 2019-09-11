@@ -10,4 +10,6 @@ f /ado_files/edukit_rmkdir.ado
 
 f /help_files/edukit.sthlp
 f /help_files/edukit_save.sthlp
+f /help_files/edukit_datalibweb.sthlp
+f /help_files/edukit_rmkdir.sthlp
 e
