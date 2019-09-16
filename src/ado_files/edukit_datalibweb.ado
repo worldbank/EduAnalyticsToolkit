@@ -24,8 +24,8 @@ program  define  edukit_datalibweb, rclass
 		local success = 0
 		local attempt = 1
 
-		* Tentatively call datalibweb 5 times, but stops before if gets non-empty dataset	*/
-		while `attempt'<=5 & `success'!=1 {
+		* Tentatively call datalibweb 10 times, but stops before if gets non-empty dataset	*/
+		while `attempt'<=10 & `success'!=1 {
 
 			capture datalibweb, `datalibweb_syntax'
 
@@ -37,13 +37,13 @@ program  define  edukit_datalibweb, rclass
 					local success = 1
 				}
 			}
-
+			sleep 1000 //If it fails, pause 1 sec (1000ms) in cause datalibweb is busy or something
 			local attempt = `attempt' + 1
 		}
 
 		* After 5 failed attempts, give-up
 		if `success'==0 {
-			noi disp as err "{phang}Having issues with datalibweb, after 5 failed attempts. Check the original datalibweb help file and the error message below for more info.{p_end}"
+			noi disp as err "{phang}Having issues with datalibweb, after 10 failed attempts. Check the original datalibweb help file and the error message below for more info.{p_end}"
 			/* Trick to display the original datalibweb error message: call it again
 			   If it succeeds this time after 5 errors, it's a miracle! */
 			datalibweb, `datalibweb_syntax'
