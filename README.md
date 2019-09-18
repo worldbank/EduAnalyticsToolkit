@@ -15,6 +15,9 @@ The team can be reached at eduanalytics@worldbank.org.
 #### Installing published versions of `edukit`
 One day **edukit** may make it to ssc but for now, it is not, so this option does not exist.
 
+If/when this happens, it will suffice to type **`ssc install edukit`** in Stata. This would install the latest published version of **edukit**. The main version of the code in the repo (the `master` branch) is what is published on SSC as well.
+
+
 #### Installing unpublished branches of this repository through _net install_
 Follow the instructions above if you want the most recent published version of **edukit**.
 If you want a yet to be published version of **edukit** then you can use the code below.
@@ -30,26 +33,17 @@ net install edukit , from("https://raw.githubusercontent.com/worldbank/eduanalyt
 An alternative to those who prefer not to use `net install` in Stata, is to install this package by cloning this repo and checking out the branch you choose to install (_master_ will be checked out by default). To update the package if the branch is updated, you would need to _pull_ the branch. The installation of the package through this method can be automated in your do file though the code below.
 
 ```stata
-* Specify the location of the cloned eduanalytics toolkit repo
-if inlist("`c(username)'","wb111111","WB111111") {
-  global edukit  "C:/Users/WB111111/Documents/Github/EduAnalyticsToolkit"
-}
+* Specify the location of the clone of EduAnalytics toolkit repo
+global edukit_clone  "C:/Users/WB111111/Documents/Github/EduAnalyticsToolkit"
 
 * Load eduanalytics toolkit package
 cap net uninstall edukit
-cap net install edukit.pkg, from("${edukit}/src") replace
-if _rc == 601 {
-  noi disp as err "{phang}Could not load edukit.pkg. You must specify a valid location of the eduanalytics toolkit package. For more info, check: https://github.com/worldbank/EduAnalyticsToolkit{p_end}"
-  error 601
-}
-else if _rc != 0 {
-  net install edukit.pkg, from("${edukit}/src") replace
-}
+net install edukit.pkg, from("${edukit_clone}/src") replace
 ```
 
 ### **Content**
 **edukit** provides a set of commands that address different aspects of data management and data analysis for
-International/National Learning Assessments (ILA/NLA) microdata databases.
+International/National Learning Assessments (ILA/NLA) microdata.
 The list of commands will be extended continuously, and suggestions for
 new commands are greatly appreciated.
 
