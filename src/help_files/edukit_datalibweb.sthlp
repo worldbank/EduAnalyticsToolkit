@@ -1,5 +1,5 @@
 {smcl}
-{* *! version 0.2 15 JUL 2019}{...}
+{* *! version 1.0 18 SEP 2019}{...}
 {cmd:help edukit_datalibweb}{...}
 {hline}
 
@@ -26,7 +26,7 @@
 {marker description}{...}
 {title:Description}
 
-{pstd}{cmd:edukit_datalibweb} calls {cmd:datalibweb} repeatedly to prevent breaking a long loop if network connection is temporarily lost/other issues while querying a file. It tentatively calls {cmd:datalibweb} 5 times, stopping as soon as a non-empty dataset is successfully loaded or displaying the original error message from {cmd:datalibweb} if all attempts failed.
+{pstd}{cmd:edukit_datalibweb} calls {cmd:datalibweb} repeatedly to prevent breaking a long loop if network connection is temporarily lost/other issues while querying a file. It tentatively calls {cmd:datalibweb} 10 times, stopping as soon as a non-empty dataset is successfully loaded or displaying the original error message from {cmd:datalibweb} if all attempts failed.
 
 {pstd}An interesting side effect of this command is suppressing the {cmd:datalibweb} header and disclaimer, normally displayed at every query.
 

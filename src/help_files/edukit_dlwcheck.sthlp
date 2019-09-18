@@ -1,12 +1,12 @@
 {smcl}
-{* *! version 0.2 15 JUL 2019}{...}
+{* *! version 1.0 18 SEP 2019}{...}
 {cmd:help edukit_dlwcheck}{...}
 {hline}
 
 {title:Title}
 
 {pstd}
-{hi:edukit_dlwcheck} {hline 2} Validates file and folders structures in EduAnalytcis' {help datalibweb:DatalibWeb} folder.
+{hi:edukit_dlwcheck} {hline 2} Validates file and folders structures in EduAnalytics' {help datalibweb:DatalibWeb} folder.
 
 {title:Syntax}
 
