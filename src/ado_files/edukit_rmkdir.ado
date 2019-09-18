@@ -1,3 +1,5 @@
+*! version 1.0 18SEP2019 EduAnalytics eduanalytics@worldbank.org
+
 * This program is a recursive implmentation of mkdir, i.e. you can created nested folders like WLD/WLD_2008_PISA.
 * The command does not crash if any folder in the nested folder already exists
 

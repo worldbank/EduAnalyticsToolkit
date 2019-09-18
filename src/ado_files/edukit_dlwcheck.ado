@@ -1,3 +1,4 @@
+*! version 1.0 18SEP2019 EduAnalytics eduanalytics@worldbank.org
 
 cap program drop 	edukit_dlwcheck
 program define	edukit_dlwcheck, rclass

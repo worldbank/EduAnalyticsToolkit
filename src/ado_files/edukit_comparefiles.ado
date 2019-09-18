@@ -1,6 +1,8 @@
+*! version 1.0 18SEP2019 EduAnalytics eduanalytics@worldbank.org
+
 * This command is similar to cf, but this handles the case with difference
 * in number of observation better, and data set do not have to be sorted.
-* if listdetail(filename) is specified, a markdown file will be created listing
+* if mdreport(filename) is specified, a markdown file will be created listing
 * all the different observations.
 
 cap program drop edukit_comparefiles

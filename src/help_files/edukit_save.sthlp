@@ -1,5 +1,5 @@
 {smcl}
-{* *! version 0.2 15 JUL 2019}{...}
+{* *! version 1.0 18 SEP 2019}{...}
 {cmd:help edukit_save}{...}
 {right:also see:  {help "save"} {help "char"} {help "dyntext"} {help "isid"} }
 {hline}
