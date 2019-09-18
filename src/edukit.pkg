@@ -1,8 +1,24 @@
-v 0.2
+v 1.0
 d edukit
 d EduAnalytics, World Bank Group (eduanalytics@worldbank.org)
 
+* Ado files
 f /ado_files/edukit.ado
 f /ado_files/edukit_save.ado
 f /ado_files/edukit_datalibweb.ado
+f /ado_files/edukit_comparefiles.ado
+f /ado_files/edukit_rmkdir.ado
+f /ado_files/edukit_dlwcheck.ado
+
+* Help files
+f /help_files/edukit.sthlp
+f /help_files/edukit_save.sthlp
+f /help_files/edukit_datalibweb.sthlp
+f /help_files/edukit_comparefiles.sthlp
+f /help_files/edukit_rmkdir.sthlp
+f /help_files/edukit_dlwcheck.sthlp
+
+* Ancillary files
+f /aux_files/edukit_save_dyntext.txt
+
 e

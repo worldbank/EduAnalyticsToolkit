@@ -1,4 +1,4 @@
-*! version 0.2 15JUL2019 EduAnalytics eduanalytics@worldbank.org
+*! version 1.0 18SEP2019 EduAnalytics eduanalytics@worldbank.org
 *  Author: Diana Goldemberg
 
 /* This program calls datalibweb repeatedly to prevent breaking a long loop
@@ -24,10 +24,10 @@ program  define  edukit_datalibweb, rclass
 		local success = 0
 		local attempt = 1
 
-		* Tentatively call datalibweb 5 times, but stops before if gets non-empty dataset	*/
-		while `attempt'<=5 & `success'!=1 {
+		* Tentatively call datalibweb 10 times, but stops before if gets non-empty dataset	*/
+		while `attempt'<=10 & `success'!=1 {
 
-			capture datalibweb, "`datalibweb_syntax'"
+			capture datalibweb, `datalibweb_syntax'
 
 			if _rc==0 {
 				/* If datalibweb did not run into any errors,	still double checks that
@@ -37,16 +37,16 @@ program  define  edukit_datalibweb, rclass
 					local success = 1
 				}
 			}
-
+			sleep 1000 //If it fails, pause 1 sec (1000ms) in cause datalibweb is busy or something
 			local attempt = `attempt' + 1
 		}
 
 		* After 5 failed attempts, give-up
 		if `success'==0 {
-			noi disp as err "{phang}Having issues with datalibweb, after 5 failed attempts. Check the original datalibweb help file and the error message below for more info.{p_end}"
+			noi disp as err "{phang}Having issues with datalibweb, after 10 failed attempts. Check the original datalibweb help file and the error message below for more info.{p_end}"
 			/* Trick to display the original datalibweb error message: call it again
 			   If it succeeds this time after 5 errors, it's a miracle! */
-			datalibweb, "`datalibweb_syntax'"
+			datalibweb, `datalibweb_syntax'
 		}
 
 	* Just in case this may be useful
