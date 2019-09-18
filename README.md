@@ -55,7 +55,13 @@ new commands are greatly appreciated.
 
  - **edukit** returns meta info on the version of _edukit_ installed.
  Can be used to ensure that the team uses the same version.
+ - **edukit_comparefiles** compares two files and list all the differences.
+It is similar to _cf_, but better at handling different number of observations,
+the data doesn't need to be sorted, and it can create a markdown file of the differences.
+ - **edukit_datalibweb** calls _datalibweb_ repeatedly to prevent breaking a loop if connection is temporarily lost or other issues arise while querying many files. _Datalibweb_ is a currently only available for Stata users within the World Bank, so this command is useless to external users.
+ - **edukit_dlwcheck** validates file and folders structures in EduAnalytics' network folder.
+ - **edukit_rmkdir** conveniently creates folders and sub-folders recursively.
  - **edukit_save** is a modified version of the save command to ensure quality of databases.
 Before saving, it compress, check _isid_, and has options to store metadata as _char_
-plus flexibility to execute special commands for eduanalytics.
- - **edukit_datalibweb** calls _datalibweb_ repeatedly to prevent breaking a loop if connection is temporarily lost or other issues arise while querying many files. _Datalibweb_ is a currently only available for Stata users within the World Bank, so this command is useless to external users.
+plus flexibility to execute special commands for EduAnalytics.
+It comes with a companion _dyndoc_ example.
