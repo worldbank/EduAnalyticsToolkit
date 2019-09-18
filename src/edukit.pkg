@@ -19,6 +19,6 @@ f /help_files/edukit_rmkdir.sthlp
 f /help_files/edukit_dlwcheck.sthlp
 
 * Ancillary files
-f /help_files/edukit_save_dyntext.txt
+f /aux_files/edukit_save_dyntext.txt
 
 e
