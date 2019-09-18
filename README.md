@@ -29,6 +29,11 @@ like this.
 net install edukit , from("https://raw.githubusercontent.com/worldbank/eduanalyticstoolkit/master/src") replace
 ```
 
+Similarly, to get the ancillary file in this package - _edukit_save_dyntext_ -, you can use the code below.
+```
+net get edukit , from("https://raw.githubusercontent.com/worldbank/eduanalyticstoolkit/master/src") replace
+```
+
 #### Installing unpublished branches of this repository through a clone
 An alternative to those who prefer not to use `net install` in Stata, is to install this package by cloning this repo and checking out the branch you choose to install (_master_ will be checked out by default). To update the package if the branch is updated, you would need to _pull_ the branch. The installation of the package through this method can be automated in your do file though the code below.
 
@@ -58,4 +63,7 @@ the data doesn't need to be sorted, and it can create a markdown file of the dif
  - **edukit_save** is a modified version of the save command to ensure quality of databases.
 Before saving, it compress, check _isid_, and has options to store metadata as _char_
 plus flexibility to execute special commands for EduAnalytics.
-It comes with a companion _dyndoc_ example.
+It comes with a companion _dyntext_ example.
+- **edukit_save_dyntext** is a txt to be used with _dyntext_ to automatically generate
+documentation for a dataset, based on metadata stored by _edukit_save_. Given that it
+is an ancillary file in the package, it must be downloaded through _net get_ instead of _net install_.

@@ -10,6 +10,11 @@ Documentation of YOUR TITLE HERE dataset
 * This file presents the example used in GLAD, so you have a starting point
 * to customize it according to your needs.
 
+* Note that this is an Ancillary file in the package, so to download it type
+* net get edukit, from("https://raw.githubusercontent.com/worldbank/eduanalyticstoolkit/dyndoc4save/src") replace
+* This file will NOT be automatically downloaded when you 'net install' the package
+* like the other ado and help files.
+
 * Author: Diana Goldemberg
 
 * This section create locals to later display them dynamically

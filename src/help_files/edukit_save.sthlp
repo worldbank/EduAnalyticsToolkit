@@ -48,6 +48,8 @@
 
 {pstd} Lastly, there is a placeholder for special commands, which fulfills specific needs from the EduAnalytics team, according to the data collection being manipulated. External users can easily customize this section for their own needs.
 
+{pstd} An example of {it:{help "dyntext"}} to complement this function - {it:edukit_save_dyntext} - is provided as ancillary file in this package, downloadable through {it:net get}.
+
 {title:Options}
 
 {dlgtab:Required}
@@ -82,6 +84,10 @@ Examples in the context of Learnig4All and GLAD:
    . {cmd:edukit_save, filename("`output_file'") path("`output_dir'") idvars("`idvars'")}
 	 {cmd:         varc("key `keyvars'; value `valuevars'; trait `traitvars'; sample `samplevars'")}
 	 {cmd:         metadata("`metadata'") collection("GLAD") dir2delete("`temp_dir'")}
+
+To autogenerate documentation through the companion dyntext:
+
+. {cmd:dyntext "edukit_save_dyntext.txt", saving("$mypath/myfile.md") replace}
 
 
 {title:Author}
