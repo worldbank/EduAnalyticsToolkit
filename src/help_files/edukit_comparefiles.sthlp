@@ -63,11 +63,12 @@
 {phang}{opt idsfromchar(string)} reads the list of ID variables from {help char} saved to the data set. The string in this option is the name of the char saved to {it:_dta[]}. Both files must have this char, the char must be called the same thing, and the content of the char in both files must list the same variables (order does not matter).{p_end}
 
 {pstd}One option required for which variables to compare{p_end}
-{phang}{opt compareboth}, {opt comparelocal}, {opt compareshared} and {opt comparevars(varlist)} specifies which variables from the local and the shared files will be compared and listed if missing. Exactly one of these options must be specified.{p_end}
-{phang2}- {opt compareboth} makes the command compare all variables that is in either one or both files.{p_end}
-{phang2}- {opt comparelocal} makes the command compare all variables in the local file regardless if they are in the shared file or not.{p_end}
-{phang2}- {opt compareshared} makes the command compare all variables in the shared file regardless if they are in the local file or not.{p_end}
-{phang2}- {opt comparevars(varlist)} explicitly lists the variables to be compared.{p_end}
+{phang}{opt compareboth}, {opt comparelocal}, {opt compareshared} and {opt comparevars(varlist)} specifies which variables from the local and the shared files will be compared and listed if missing. Exactly one of these options must be specified:{p_end}
+
+{pmore}- {opt compareboth} makes the command compare all variables that is in either one or both files.{break}
+- {opt comparelocal} makes the command compare all variables in the local file regardless if they are in the shared file or not.{break}
+- {opt compareshared} makes the command compare all variables in the shared file regardless if they are in the local file or not.{break}
+- {opt comparevars(varlist)} explicitly lists the variables to be compared.{p_end}
 
 {dlgtab:Optional}
 {phang}{opt wigglevars(varlist)} and {opt wiggleroom(numlist)} allows variables to differ with a percental amount. This is relevant when, for example, the exact variable value depends on randomization, and restructring the code have an impact on the randomization even when the {help seed} it set. {opt wigglevars()} lists the variables where a wiggle room is accpted, and {opt wiggleroom()} specifies how much using decimal points where 0.01 means that the values are allowed to be 1% appart. {opt wiggleroom()} can only be used if {opt wigglevars()} used. If {opt wigglevars()} is not specified, then the wiggle room is defaulted to 0.0001 which means .01%.{p_end}
