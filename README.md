@@ -1,4 +1,4 @@
-﻿**Edukit - EduAnalytics Team Toolkit for Data Managment, Documentation and Analytics**
+﻿**Edukit - EduAnalytics Team Toolkit for Data Management, Documentation and Analytics**
 =====
 <img align="left" src="https://user-images.githubusercontent.com/43160181/62169131-58ea6a00-b2f5-11e9-977f-18117cc9e42d.png" width="130">
 
