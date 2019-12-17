@@ -177,9 +177,9 @@ program define   edukit_save, rclass
 	* In case the creation of the file being saved required tempfiles, this
 	* option easily delete all the tempfiles in a tempfolder at once
 	if "`dir2delete'" != "" {
-		fs "`dir2delete'/*.dta"
-		foreach f in `r(files)' {
-			cap erase "`dir2delete'/`f'"
+		local files2delete : dir `"`dir2delete'"' files "*"
+		foreach file of local files2delete {
+			cap erase `"`dir2delete'/`file'"'
 		}
 		cap rmdir "`dir2delete'"
 	}
