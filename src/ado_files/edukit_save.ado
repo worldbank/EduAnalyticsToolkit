@@ -83,13 +83,21 @@ program define   edukit_save, rclass
 
 		* Parsing variable_class and variables to set
 		gettoken setclass_name_and_vars varclasses : varclasses, parse(";")
+		if wordcount("`setclass_name_and_vars'") == 1 {
+			noi di as error "{phang}Option -varclasses- incorrectly specified. Each class name must be followed by one or more variable names. For example: varclasses(value var1 var2; trait var3).{p_end}"
+			exit 2222
+		}
 		* Splitting variable_class and variables
 		gettoken varclass_name class_variables : setclass_name_and_vars
 		* Removing leading or trailing spaces
 		local varclass_name   = trim("`varclass_name'")
 		local class_variables = trim("`class_variables'")
 		* Unabbreviate wildcards* in the variables for this varclass
-		unab class_variables : `class_variables'
+		cap unab class_variables : `class_variables'
+		if _rc != 0 {
+			noi di as error "{phang}Option -varclasses- incorrectly specified. Each class name must be followed by one or more variable names. For example: varclasses(value var1 var2; trait var3).{p_end}"
+			exit 2222
+		}
 
 		* Update macros with newly isolated variable_class / vars
 		local varclasses_used "`varclasses_used' `varclass_name'vars"
