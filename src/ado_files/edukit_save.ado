@@ -1,5 +1,5 @@
-*! version 1.0 18SEP2019 EduAnalytics eduanalytics@worldbank.org
-*  Author: Diana Goldemberg
+*! version 1.1 17DEC2019 EduAnalytics eduanalytics@worldbank.org
+*! Author: Diana Goldemberg
 
 /* Saves a dataset after compressing and checking isid, with
    options to store metadata and variable information in chars,
