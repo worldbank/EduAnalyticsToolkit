@@ -1,4 +1,4 @@
-v 1.1
+v 1.2
 
 d 'EDUKIT': EduAnalytics team toolkit for data management, documentation and analytics
 d EduAnalytics, World Bank Group (eduanalytics@worldbank.org)
@@ -10,7 +10,7 @@ d KW: analytics
 d KW: EduAnalytics
 d
 d Requires: Stata version 13
-d Distribution-Date: 20191217
+d Distribution-Date: 20200320
 d License: MIT
 
 * Ado files

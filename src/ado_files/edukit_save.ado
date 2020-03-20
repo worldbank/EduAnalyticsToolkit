@@ -1,4 +1,4 @@
-*! version 1.1 17DEC2019 EduAnalytics eduanalytics@worldbank.org
+*! version 1.2 20MAR2020 EduAnalytics eduanalytics@worldbank.org
 *! Author: Diana Goldemberg
 
 /* Saves a dataset after compressing and checking isid, with
@@ -159,7 +159,8 @@ program define   edukit_save, rclass
 	* Special commands to perform according to collection go here
 	if "`collection'" == "GLAD" {  // GLAD = Global Learning Assessment Database
 		* Before discarding variables without a varclass, saves GLAD_module-BASE.dta
-		noi save "`path'/`filename'-BASE.dta", replace
+		local filename_BASE = subinstr("`filename'", "GLAD_ALL", "GLAD_BASE", .)
+		noi save "`path'/`filename_BASE'.dta", replace
 	}
 	else if "`collection'" == "CLO" {  // CLO = Country Level Outcomes
 		noi disp as txt "{phang}FYI: no special commads are defined for collection CLO.{p_end}"
