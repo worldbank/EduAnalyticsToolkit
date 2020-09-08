@@ -57,8 +57,7 @@ program define   nestweight, rclass
       * Denominator of adjustment to be applied to original weights
       if `bynumeric'   sum `oldwgtvar' if `by' ==  `level'  & `denominator' == 1
       else             sum `oldwgtvar' if `by' == "`level'" & `denominator' == 1
-      if "`rule'" == "count" local den = `r(N)'
-      else                   local den = `r(sum)'
+      local den = `r(sum)'
 
       * Copies original weights with adjustment into new weights
       if `bynumeric'   replace `newwgtvar' = `oldwgtvar' * `num'/`den' ///
