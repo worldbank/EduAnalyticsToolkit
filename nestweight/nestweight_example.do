@@ -24,6 +24,7 @@ tabstat    myvar [fw = pop], by(region)
 nestweight myvar [fw = pop], by(region)
 return list
 
+
 ****************************
 * Learning Poverty context *
 ****************************
@@ -34,5 +35,13 @@ global clone "`r(github)'/LearningPoverty-Production/"
 use "${clone}/01_data/013_outputs/preference1005.dta", clear
 
 nestweight adj_nonprof_all if lendingtype != "LNX" [fw = population_2015_all], ///
-           by(region) only(if year_assessment >= 2011)
+           by(region) only(if year_assessment >= 2011) gen(reg_wgt)
 return list
+
+qui do "${clone}/01_data/012_programs/01262_population_weights.do"
+population_weights, timewindow(year_assessment>=2011) countryfilter(lendingtype!="LNX") 
+
+gen relative_dif = abs(region_weight - reg_wgt)/population_2015_all
+
+sum relative_dif
+br countrycode relative_dif region_weight reg_wgt if relative_dif>0.0001 & !missing(region_weight) & !missing(reg_wgt)
