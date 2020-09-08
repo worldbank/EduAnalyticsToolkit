@@ -20,10 +20,9 @@ program define   nestweight, rclass
     * If no weight is specified, still redistribute the senate weights
     if ("`weight'" == "") {
       gen `auxones' = 1
-      local oldwgtexp  "[aw = `wgt']"
+      local oldwgtexp  "[aw = `auxones']"
       local oldwgtvar  "`auxones'"
       local weight     "aweight"
-      local rule       "count"
     }
     * If some weight is specified, store the type and weight variable
     else {
@@ -38,9 +37,9 @@ program define   nestweight, rclass
 
     * Restricts the universe of variables considered (numerator of adjustment)
     gen `numerator' = 1 `in' `if'
-    
+
     * Restricts the universe of observations considered (denominator of adjustment)
-    gen `denominator' = (`numerator' == 1 & !missing(`myvar') & !missing(`oldwgtvar')) `only'    
+    gen `denominator' = (`numerator' == 1 & !missing(`myvar') & !missing(`oldwgtvar')) `only'
 
     * New weights variable start as empty
     gen double `newwgtvar' = .
@@ -51,16 +50,9 @@ program define   nestweight, rclass
     foreach level of local levelsby {
 
       * Numerator of adjustment to be applied to original weights
-      if "`rule'" == "count" {
-        if `bynumeric' sum `by' if `by' ==  `level'  & `numerator' == 1
-        else           sum `by' if `by' == "`level'" & `numerator' == 1
-        local num = `r(N)'
-      }
-      else {
-        if `bynumeric' sum `oldwgtvar' if `by' ==  `level'  & `numerator' == 1
-        else           sum `oldwgtvar' if `by' == "`level'" & `numerator' == 1
-        local num = `r(sum)'
-      }
+      if `bynumeric' sum `oldwgtvar' if `by' ==  `level'  & `numerator' == 1
+      else           sum `oldwgtvar' if `by' == "`level'" & `numerator' == 1
+      local num = `r(sum)'
 
       * Denominator of adjustment to be applied to original weights
       if `bynumeric'   sum `oldwgtvar' if `by' ==  `level'  & `denominator' == 1
@@ -73,7 +65,7 @@ program define   nestweight, rclass
                        if `by' ==  `level'  & `denominator' == 1
       else             replace `newwgtvar' = `oldwgtvar' * `num'/`den' ///
                        if `by' == "`level'" & `denominator' == 1
-      
+
     }
 
     * Force weights to be integer numbers if they are frequency weights
@@ -85,7 +77,7 @@ program define   nestweight, rclass
   }
 
   tabstat `myvar' `newwgtexp', by(`by')
-  
+
   qui sum `myvar' `newwgtexp'
 
   return local mean `r(mean)'
