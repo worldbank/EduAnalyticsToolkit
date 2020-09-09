@@ -1,5 +1,5 @@
-*! version 1.0 18SEP2019 EduAnalytics eduanalytics@worldbank.org
-*  Author: Diana Goldemberg
+*! version 1.2 20MAR2020 EduAnalytics eduanalytics@worldbank.org
+*! Author: Diana Goldemberg
 
 /* Saves a dataset after compressing and checking isid, with
    options to store metadata and variable information in chars,
@@ -83,13 +83,21 @@ program define   edukit_save, rclass
 
 		* Parsing variable_class and variables to set
 		gettoken setclass_name_and_vars varclasses : varclasses, parse(";")
+		if wordcount("`setclass_name_and_vars'") == 1 {
+			noi di as error "{phang}Option -varclasses- incorrectly specified. Each class name must be followed by one or more variable names. For example: varclasses(value var1 var2; trait var3).{p_end}"
+			exit 2222
+		}
 		* Splitting variable_class and variables
 		gettoken varclass_name class_variables : setclass_name_and_vars
 		* Removing leading or trailing spaces
 		local varclass_name   = trim("`varclass_name'")
 		local class_variables = trim("`class_variables'")
 		* Unabbreviate wildcards* in the variables for this varclass
-		unab class_variables : `class_variables'
+		cap unab class_variables : `class_variables'
+		if _rc != 0 {
+			noi di as error "{phang}Option -varclasses- incorrectly specified. Each class name must be followed by one or more variable names. For example: varclasses(value var1 var2; trait var3).{p_end}"
+			exit 2222
+		}
 
 		* Update macros with newly isolated variable_class / vars
 		local varclasses_used "`varclasses_used' `varclass_name'vars"
@@ -151,7 +159,8 @@ program define   edukit_save, rclass
 	* Special commands to perform according to collection go here
 	if "`collection'" == "GLAD" {  // GLAD = Global Learning Assessment Database
 		* Before discarding variables without a varclass, saves GLAD_module-BASE.dta
-		noi save "`path'/`filename'-BASE.dta", replace
+		local filename_BASE = subinstr("`filename'", "GLAD_ALL", "GLAD_BASE", .)
+		noi save "`path'/`filename_BASE'.dta", replace
 	}
 	else if "`collection'" == "CLO" {  // CLO = Country Level Outcomes
 		noi disp as txt "{phang}FYI: no special commads are defined for collection CLO.{p_end}"
@@ -177,9 +186,9 @@ program define   edukit_save, rclass
 	* In case the creation of the file being saved required tempfiles, this
 	* option easily delete all the tempfiles in a tempfolder at once
 	if "`dir2delete'" != "" {
-		fs "`dir2delete'/*.dta"
-		foreach f in `r(files)' {
-			cap erase "`dir2delete'/`f'"
+		local files2delete : dir `"`dir2delete'"' files "*"
+		foreach file of local files2delete {
+			cap erase `"`dir2delete'/`file'"'
 		}
 		cap rmdir "`dir2delete'"
 	}
