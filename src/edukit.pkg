@@ -1,4 +1,4 @@
-v 1.2
+v 1.3
 
 d 'EDUKIT': EduAnalytics team toolkit for data management, documentation and analytics
 d EduAnalytics, World Bank Group (eduanalytics@worldbank.org)
@@ -10,7 +10,7 @@ d KW: analytics
 d KW: EduAnalytics
 d
 d Requires: Stata version 13
-d Distribution-Date: 20200320
+d Distribution-Date: 20200924
 d License: MIT
 
 * Ado files
@@ -20,6 +20,7 @@ f /ado_files/edukit_datalibweb.ado
 f /ado_files/edukit_comparefiles.ado
 f /ado_files/edukit_rmkdir.ado
 f /ado_files/edukit_dlwcheck.ado
+f /ado_files/edukit_nestweight.ado
 
 * Help files
 f /help_files/edukit.sthlp
@@ -28,6 +29,7 @@ f /help_files/edukit_datalibweb.sthlp
 f /help_files/edukit_comparefiles.sthlp
 f /help_files/edukit_rmkdir.sthlp
 f /help_files/edukit_dlwcheck.sthlp
+f /help_files/edukit_nestweight.sthlp
 
 * Ancillary files
 f /aux_files/edukit_save_dyntext.txt

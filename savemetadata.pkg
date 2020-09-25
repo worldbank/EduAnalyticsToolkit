@@ -1,0 +1,25 @@
+v 1.2
+
+d 'SAVEMETADATA': Checks and saves a dataset storing metadata stored as char
+d EduAnalytics, World Bank Group (eduanalytics@worldbank.org)
+d Repo: https://github.com/worldbank/EduAnalyticsToolkit
+d
+d KW: data management
+d KW: documentation
+d KW: analytics
+d KW: EduAnalytics
+d
+d Requires: Stata version 13
+d Distribution-Date: 20200320
+d License: MIT
+
+* Ado files
+f /savemetadata/savemetadata.ado
+
+* Help files
+f /savemetadata/savemetadata.sthlp
+
+* Ancillary files
+f /savemetadata/savemetadata_dyntext.txt
+
+e

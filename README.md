@@ -6,9 +6,23 @@ This toolkit was developed by people that work at or with the **EduAnalytics** t
 
 While the commands in this toolkit are developed with best practices for analysis of microdata of learning assessments in mind, some commands may be useful outside that field as well. Some commands are very specific to out own work flow, and might not suit other projects, but we want to share as much as possible for anyone to use if applicable.
 
-
-
 ### **Install and Update**
+
+All commands can be installed as a bundle through **edukit**. The commands that are
+more likely to be useful for other projects can also be installed as standalone packages.
+
+###### Installing `cmd` as a standalone package
+
+Four command are available as standalone packages: comparefiles, nestweight, rmkdir, savemetadata.
+
+They are currently not published on [SSC](https://www.stata.com/support/ssc-installation/), so they cannot be installed through `ssc install`.
+
+If you want to install the most recent carefully curated version of any **cmd** in this list then you can use the code below, replacing **cmd**
+for the available standalone packages (comparefiles, nestweight, rmkdir, savemetadata)
+
+```
+net install cmd, from("https://raw.githubusercontent.com/worldbank/eduanalyticstoolkit/master") replace
+```
 
 ###### Installing `edukit`
  **edukit** is currently not published on [SSC](https://www.stata.com/support/ssc-installation/), so it cannot be installed through `ssc install`.
@@ -57,6 +71,7 @@ It is similar to _cf_, but better at handling different number of observations,
 the data doesn't need to be sorted, and it can create a markdown file of the differences.
  - **edukit_datalibweb** calls _datalibweb_ repeatedly to prevent breaking a loop if connection is temporarily lost or other issues arise while querying many files. _Datalibweb_ is a currently only available for Stata users within the World Bank, so this command is not intended to be used outside the World Bank.
  - **edukit_dlwcheck** validates file and folders structures in EduAnalytics' network folder.
+ - **edukit_nestweight** redistributes weights from missing nested observations.
  - **edukit_rmkdir** conveniently creates folders and sub-folders recursively.
  - **edukit_save** is a modified version of the save command to ensure quality of databases.
 Before saving, it compress, check _isid_, and has options to store metadata as _char_
