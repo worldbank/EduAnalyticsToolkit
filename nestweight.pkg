@@ -1,0 +1,22 @@
+v 1.1
+
+d 'NESTWEIGHT': Redistributes weights from missing nested observations
+d EduAnalytics, World Bank Group (eduanalytics@worldbank.org)
+d Repo: https://github.com/worldbank/EduAnalyticsToolkit
+d
+d KW: data management
+d KW: documentation
+d KW: analytics
+d KW: EduAnalytics
+d
+d Requires: Stata version 13
+d Distribution-Date: 20200908
+d License: MIT
+
+* Ado files
+f /nestweight/nestweight.ado
+
+* Help files
+f /nestweight/nestweight.sthlp
+
+e

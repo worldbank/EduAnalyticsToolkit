@@ -1,6 +1,6 @@
 v 1.0
 
-d 'NESTWEIGHT': Redistribute weights from missing nested observations
+d 'COMPAREFILES': Compares files and list all the differences
 d EduAnalytics, World Bank Group (eduanalytics@worldbank.org)
 d Repo: https://github.com/worldbank/EduAnalyticsToolkit
 d
@@ -14,9 +14,9 @@ d Distribution-Date: 20200908
 d License: MIT
 
 * Ado files
-f /nestweight.ado
+f /comparefiles/comparefiles.ado
 
 * Help files
-f /nestweight.sthlp
+f /comparefiles/comparefiles.sthlp
 
 e

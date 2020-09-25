@@ -1,11 +1,11 @@
-*! version 1.0 18SEP2019 EduAnalytics eduanalytics@worldbank.org
+*! version 1.3 24SEP2020 EduAnalytics eduanalytics@worldbank.org
 
 capture program drop edukit
 program edukit, rclass
 
 	* UPDATE THESE LOCALS FOR EACH NEW VERSION PUBLISHED
-	local version "1.0"
-	local versionDate "18SEP2019"
+	local version "1.3"
+	local versionDate "24SEP2020"
 
 	syntax [anything]
 
