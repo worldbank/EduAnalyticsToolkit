@@ -1,4 +1,5 @@
 *! version 1.0 18SEP2019 EduAnalytics eduanalytics@worldbank.org
+*! Author: Kristoffer Bjärkefur
 
 * This command is similar to cf, but this handles the case with difference
 * in number of observation better, and data set do not have to be sorted.

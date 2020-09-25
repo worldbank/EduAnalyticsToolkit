@@ -1,5 +1,5 @@
 *! version 1.0 8SEP2020 EduAnalytics eduanalytics@worldbank.org
-*  Author: Diana Goldemberg
+*! Author: Diana Goldemberg
 
 /* This program redistribute weights from missing nested observations
    to produce consistent aggregate estimates when missing values

@@ -44,6 +44,10 @@
 
 {phang}{opt newfolders(string)} lists the folders that will be created in the folder specified in {opt parent()}. One folder or many folders separated by "/" can be listed. If {it:folder1/folder2} is listed then {it:folder2} will be created inside {it:folder1}. There is no way to use this command to create two folders directly in the {opt parent()} folder, unless this command is used twice.{p_end}
 
+{title:Author}
+
+{phang}Kristoffer Bjärkefur
+
 {title:Acknowledgements}
 
 {phang}This command was developed for the EduAnalytics team at the World Bank Education Global Practice [eduanalytics@worldbank.org].{p_end}
