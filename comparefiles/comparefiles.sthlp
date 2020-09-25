@@ -77,6 +77,10 @@
 
 {phang}{opt mdevensame} tells the command to write the report specified in {opt mdreport()} even when the two files are identical. The default is that the report is only written if there are discrepancies. {p_end}
 
+{title:Author}
+
+{phang}Kristoffer Bjärkefur
+
 {title:Acknowledgements}
 
 {phang}This command was developed for the EduAnalytics team at the World Bank Education Global Practice [eduanalytics@worldbank.org].{p_end}
