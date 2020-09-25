@@ -49,7 +49,7 @@
 
 {phang} {cmdab:gen:erate(}{it:newvar}{cmd:)} by default, {cmd:nestweight} does not alter the original dataset. To store the new weight variable used to produced the overall estimate, you must specify this option
 
-{phang} {cmdab:only(}{it:string}{cmd:)} gives extra flexibility to keep only observations based on some criteria, treating others as if {it:myvar} was missing. It can be specified through {it:[if]} and/or {it:[in]} statements. While the main {it:[if] [in]} statements will affect both the numerator and denominator of the weight adjustment factor, the option {it:only} affects only the denominator.
+{phang} {cmdab:only(}{it:string}{cmd:)} gives extra flexibility to keep only observations based on some criteria, treating others as if {it:myvar} was missing. It can be specified through {it:[if]} and/or {it:[in]} statements. While the main {it:if} and {it:in} statements (before the comma) will affect both the numerator and denominator of the weight adjustment factor, {it:if} and {it:in} statements inside option {it:only} affect only the denominator.
 
 
 {title:Examples}
