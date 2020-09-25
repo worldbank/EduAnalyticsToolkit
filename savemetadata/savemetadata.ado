@@ -5,8 +5,8 @@
    options to store metadata and variable information in chars,
    plus flexibility to execute special commands for EduAnalytics */
 
-cap program drop edukit_save
-program define   edukit_save, rclass
+cap program drop savemetadata
+program define   savemetadata, rclass
 
 	syntax,	FILEname(string) Path(string) IDvars(string) ///
 		[ VARClasses(string) METAdata(string) dir2delete(string) COLLection(string) ]

@@ -1,6 +1,6 @@
-v 1.0
+v 1.1
 
-d 'NESTWEIGHT': Redistribute weights from missing nested observations
+d 'NESTWEIGHT': Redistributes weights from missing nested observations
 d EduAnalytics, World Bank Group (eduanalytics@worldbank.org)
 d Repo: https://github.com/worldbank/EduAnalyticsToolkit
 d

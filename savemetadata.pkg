@@ -1,6 +1,6 @@
 v 1.2
 
-d 'SAVEMETADATA': Check and save a dataset storing metadata stored as char
+d 'SAVEMETADATA': Checks and saves a dataset storing metadata stored as char
 d EduAnalytics, World Bank Group (eduanalytics@worldbank.org)
 d Repo: https://github.com/worldbank/EduAnalyticsToolkit
 d
