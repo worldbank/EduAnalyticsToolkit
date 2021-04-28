@@ -1,0 +1,35 @@
+v 1.2
+
+d 'EDUKIT': EduAnalytics team toolkit for data management, documentation and analytics
+d EduAnalytics, World Bank Group (eduanalytics@worldbank.org)
+d Repo: https://github.com/worldbank/EduAnalyticsToolkit
+d
+d KW: data management
+d KW: documentation
+d KW: analytics
+d KW: EduAnalytics
+d
+d Requires: Stata version 13
+d Distribution-Date: 20200320
+d License: MIT
+
+* Ado files
+f src/ado_files/edukit.ado
+f src/ado_files/edukit_save.ado
+f src/ado_files/edukit_datalibweb.ado
+f src/ado_files/edukit_comparefiles.ado
+f src/ado_files/edukit_rmkdir.ado
+f src/ado_files/edukit_dlwcheck.ado
+
+* Help files
+f src/help_files/edukit.sthlp
+f src/help_files/edukit_save.sthlp
+f src/help_files/edukit_datalibweb.sthlp
+f src/help_files/edukit_comparefiles.sthlp
+f src/help_files/edukit_rmkdir.sthlp
+f src/help_files/edukit_dlwcheck.sthlp
+
+* Ancillary files
+f src/aux_files/edukit_save_dyntext.txt
+
+e
