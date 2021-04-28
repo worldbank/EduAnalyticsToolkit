@@ -1,12 +1,12 @@
 *! version 1.0 8SEP2020 EduAnalytics eduanalytics@worldbank.org
-*! Author: Diana Goldemberg
+*  Author: Diana Goldemberg
 
 /* This program redistribute weights from missing nested observations
    to produce consistent aggregate estimates when missing values
    do not occur completely at random. */
 
-cap program drop nestweight
-program define   nestweight, rclass
+cap program drop edukit_nestweight
+program define   edukit_nestweight, rclass
 
   syntax varlist(numeric min=1 max=1) [if] [in]  ///
         [pweight fweight aweight] , by(varname)  ///

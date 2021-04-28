@@ -1,4 +1,6 @@
-v 1.3
+v 2.0
 d EduAnalytics, World Bank Group (eduanalytics@worldbank.org)
-p edukit EduAnalytics team toolkit for data management, documentation and analytics
-p nestweight  Redistribute weights from missing nested observations
+p 'COMPAREFILES': Compares files and list all the differences
+p 'NESTWEIGHT': Redistributes weights from missing nested observations
+p 'RMKDIR': Conveniently creates folders and sub-folders recursively
+p 'SAVEMETADATA': Checks and saves a dataset storing metadata stored as char

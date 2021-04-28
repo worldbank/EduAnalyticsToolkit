@@ -1,6 +1,6 @@
-v 1.1
+v 1.0
 
-d 'NESTWEIGHT': Redistributes weights from missing nested observations
+d 'RMKDIR': Conveniently creates folders and sub-folders recursively
 d EduAnalytics, World Bank Group (eduanalytics@worldbank.org)
 d Repo: https://github.com/worldbank/EduAnalyticsToolkit
 d
@@ -14,9 +14,9 @@ d Distribution-Date: 20200908
 d License: MIT
 
 * Ado files
-f /nestweight/nestweight.ado
+f /rmkdir/rmkdir.ado
 
 * Help files
-f /nestweight/nestweight.sthlp
+f /rmkdir/rmkdir.sthlp
 
 e
