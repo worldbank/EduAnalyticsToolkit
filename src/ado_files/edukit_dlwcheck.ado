@@ -576,7 +576,7 @@ qui {
         *Copy the new master dofile from the tempfile to the original position
         copy "`tempfilename'"  `"`reportfolder'/test.smcl"' , replace
 
-        translate "`tempfilename'" `"`reportfolder'/HLO_FOLDER_REPORT_`timestamp'.txt"', trans(smcl2txt) replace linesize(220)
+        translate "`tempfilename'" `"`reportfolder'/HLO_FOLDER_REPORT_`timestamp'.txt"', trans(smcl2txt) replace linesize(255)
 
         noi di ""
         noi di `"{pstd}Report written to: {browse "`reportfolder'/HLO_FOLDER_REPORT_`timestamp'.txt":`reportfolder'/HLO_FOLDER_REPORT_`timestamp'.txt}{p_end}"'
