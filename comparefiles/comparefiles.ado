@@ -1,4 +1,6 @@
-*! version 1.0 18SEP2019 EduAnalytics eduanalytics@worldbank.org
+*! version 1.1 21MAR2022 EduAnalytics eduanalytics@worldbank.org
+* sval and lval now allow for missing values 
+* version 1.0 18SEP2019 EduAnalytics eduanalytics@worldbank.org
 *! Author: Kristoffer Bjärkefur
 
 * This command is similar to cf, but this handles the case with difference
@@ -452,6 +454,13 @@ qui {
 								local lval = `compvar'__[`i']
 								local IDstr = `IDstring'[`i']
 								local diffstr = `diff'[`i']
+								
+								if ("`sval'" == "" & "`diffstr'" == "N/A") {
+									local sval = "N/A"
+								}
+								if ("`lval'" == "" & "`diffstr'" == "N/A") {
+									local lval = "N/A"
+								}
 
 								markdown_missmatch_varval, filehandle(`filehandle') sval(`sval') lval(`lval') idstr("`IDstr'") diffstr(`diffstr')
 							}
