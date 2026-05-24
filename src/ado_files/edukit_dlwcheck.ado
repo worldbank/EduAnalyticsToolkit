@@ -1,4 +1,6 @@
-*! version 1.0 18SEP2019 EduAnalytics eduanalytics@worldbank.org
+*! version 1.1 24MAY2026 EduAnalytics eduanalytics@worldbank.org
+* HLO_FOLDER_REPORT translate linesize 220 -> 255 (Stata max)
+* version 1.0 18SEP2019 EduAnalytics eduanalytics@worldbank.org
 
 cap program drop 	edukit_dlwcheck
 program define	edukit_dlwcheck, rclass
@@ -576,7 +578,7 @@ qui {
         *Copy the new master dofile from the tempfile to the original position
         copy "`tempfilename'"  `"`reportfolder'/test.smcl"' , replace
 
-        translate "`tempfilename'" `"`reportfolder'/HLO_FOLDER_REPORT_`timestamp'.txt"', trans(smcl2txt) replace linesize(220)
+        translate "`tempfilename'" `"`reportfolder'/HLO_FOLDER_REPORT_`timestamp'.txt"', trans(smcl2txt) replace linesize(255)
 
         noi di ""
         noi di `"{pstd}Report written to: {browse "`reportfolder'/HLO_FOLDER_REPORT_`timestamp'.txt":`reportfolder'/HLO_FOLDER_REPORT_`timestamp'.txt}{p_end}"'
