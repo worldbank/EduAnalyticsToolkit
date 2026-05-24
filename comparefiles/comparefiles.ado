@@ -1,5 +1,6 @@
 *! version 1.2 24MAY2026 EduAnalytics eduanalytics@worldbank.org
 * catch idvar type mismatch (string vs numeric) before merge crash (#16)
+* restore preserve stack on soft-fail early-exit paths (#34)
 * version 1.1 24MAY2026 EduAnalytics eduanalytics@worldbank.org
 * sval/lval render as N/A for missing string values in markdown report
 * version 1.0 18SEP2019 EduAnalytics eduanalytics@worldbank.org
@@ -73,6 +74,7 @@ qui {
 				return local identical 0
 				return local sharednoexist 1
 
+				restore
 				exit
 			}
 			else if _rc confirm file "``file''"
@@ -257,6 +259,8 @@ qui {
 
 			return local identical 0
 			return local idvartype_mismatch 1
+
+			restore
 			exit
 		}
 
