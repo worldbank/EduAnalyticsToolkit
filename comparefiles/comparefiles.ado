@@ -1,4 +1,7 @@
-*! version 1.1 24MAY2026 EduAnalytics eduanalytics@worldbank.org
+*! version 1.2 24MAY2026 EduAnalytics eduanalytics@worldbank.org
+* catch idvar type mismatch (string vs numeric) before merge crash (#16)
+* restore preserve stack on soft-fail early-exit paths (#34)
+* version 1.1 24MAY2026 EduAnalytics eduanalytics@worldbank.org
 * sval/lval render as N/A for missing string values in markdown report
 * version 1.0 18SEP2019 EduAnalytics eduanalytics@worldbank.org
 *! Author: Kristoffer Bjärkefur
@@ -71,6 +74,7 @@ qui {
 				return local identical 0
 				return local sharednoexist 1
 
+				restore
 				exit
 			}
 			else if _rc confirm file "``file''"
@@ -163,6 +167,13 @@ qui {
 			isid `idvars'
 		}
 
+		* Capture idvar class (string vs numeric) for cross-file type check
+		foreach idvar of local idvars {
+			cap confirm string variable `idvar'
+			if !_rc local localclass_`idvar' "string"
+			else    local localclass_`idvar' "numeric"
+		}
+
 		** If compareboth was used, then take all variables from localfile apart
 		*  from idvars and add to comparevars
 		if "`compareboth'" != "" {
@@ -224,6 +235,33 @@ qui {
 		else if (_rc != 0) {
 			noi di as error "{pstd}Error in isid for shared file in comparefiles.ado{p_end}"
 			isid `idvars'
+		}
+
+		* Detect idvar class mismatch (string vs numeric) before merge would crash
+		local idvar_typeissues ""
+		foreach idvar of local idvars {
+			cap confirm string variable `idvar'
+			if !_rc local sharedclass "string"
+			else    local sharedclass "numeric"
+
+			if ("`sharedclass'" != "`localclass_`idvar''") {
+				local idvar_typeissues "`idvar_typeissues' `idvar'(local=`localclass_`idvar'',shared=`sharedclass')"
+			}
+		}
+		if "`idvar_typeissues'" != "" {
+			noi di as error "{pstd}ID variables differ in type between local and shared files:`idvar_typeissues'. Files cannot be compared.{p_end}"
+
+			if "`mdreport'" != "" {
+				file write `filehandle' _n "#### ID variables have different types" _n
+				file write `filehandle' "The following ID variables differ between local and shared files:`idvar_typeissues'" _n
+				markdown_writefile , filehandle(`filehandle') markdownfile("`mdreport'") markdowntemp("`tmp_mdfile'")
+			}
+
+			return local identical 0
+			return local idvartype_mismatch 1
+
+			restore
+			exit
 		}
 
 		*Save the number of obseravations
